@@ -10,7 +10,23 @@
     	<label>Imagen</label>
 		<input type="file" name="imagen" id="imagen" file-model="imagen" flow-btn class="form-control" placeholder="Imagen"><br>
   	</div>
-  
+  	<div class="form-group">
+  		<div class="container">
+  			<div class="thumbnail" ng-hide="$flow.files.length">
+     			<img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=Sin+imagen" />
+    		</div>
+    		<div class="thumbnail" ng-show="$flow.files.length">
+      			<img flow-img="$flow.files[0]" />
+    		</div>
+    		<div>
+    			<a href="#" class="btn btn-primary" ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Seleccionar una imagen</a>
+		      	<a href="#" class="btn" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Change</a>
+		      	<a href="#" class="btn btn-danger" ng-show="$flow.files.length" ng-click="$flow.cancel()">Remove</a>
+    		</div>
+    		<p>Only PNG,GIF,JPG files allowed.</p>
+		</div>
+  	</div>
+  	
   	<p><hr></p>
   
   	<div class="row">
@@ -21,34 +37,6 @@
       		<button class="btn btn-primary pull-right" type="submit" ng-click="$flow.upload()">Crear Nuevo Cupón &raquo;</button>
     	</div>
   	</div>
-  
-
-<div class="container">
-  <h1>flow image example</h1>
-  <hr class="soften"/>
-
-  <div>
-    <div class="thumbnail" ng-hide="$flow.files.length">
-      <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=no+image" />
-    </div>
-    <div class="thumbnail" ng-show="$flow.files.length">
-      <img flow-img="$flow.files[0]" />
-    </div>
-    <div>
-      <a href="#" class="btn" ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Select image</a>
-      <a href="#" class="btn" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Change</a>
-      <a href="#" class="btn btn-danger" ng-show="$flow.files.length"
-         ng-click="$flow.cancel()">
-        Remove
-      </a>
-    </div>
-    <p>
-      Only PNG,GIF,JPG files allowed.
-    </p>
-  </div>
-</div>
-
-
   <p>&nbsp;</p>
   
 </form>
