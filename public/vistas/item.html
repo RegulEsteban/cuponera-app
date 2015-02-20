@@ -1,0 +1,53 @@
+<div class="page-header">
+	<h1>Ver Cupón</h1>
+</div>
+<div class="well well-lg">
+	<strong>Anuncio</strong><br>{{cupon.anuncioText}}
+</div>
+
+<div ng-hide="cupon.votoUsuario">
+	<p class="lead">Votar por un comentario.</p>
+
+	<form role="form" ng-submit="votar()">
+		<div ng-repeat="eleccion in cupon.elecciones" class="radio">
+			<label>
+				<input type="radio" name="eleccion" ng-model="cupon.votarUsuario" value="{{eleccion._id}}">
+				{{eleccion.comentario}}
+			</label>
+		</div>
+		<p><hr></p>
+		<div class="row">
+			<div class="col-xs-6">
+				<a href="#/cuponera" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Regresar a la Lista de cupones</a>
+			</div>
+			<div class="col-xs-6">
+				<button class="btn btn-primary pull-right" type="submit">Votar &raquo;</button>
+			</div>
+		</div>
+	</form>
+</div>
+	
+<div ng-show="cupon.votoUsuario">
+	<table class="result-table">
+		<tr ng-repeat="eleccion in cupon.elecciones">
+			<td>{{eleccion.comentario}}</td>
+			<td>
+				<table style="background-color: lightblue; width: {{(eleccion.votos.length)/(cupon.totalVotos)*100}}%; text-align: right">
+					<tr><td>{{eleccion.votos.length}}</td></tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+			
+	<p>
+		<em>
+			{{cupon.totalVotos}} votes counted so far.
+			<span ng-show="cupon.eligioUsuario">You voted for <strong>{{cupon.eligioUsuario.comentario}}</strong>.</span>
+		</em>
+	</p>
+	
+	<p><hr></p>
+	
+	<p><a href="#/cuponera" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Regresar a la Lista de cupones</a></p>
+</div>
+<p>&nbsp;</p>

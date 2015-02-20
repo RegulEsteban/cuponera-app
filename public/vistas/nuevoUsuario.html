@@ -1,0 +1,49 @@
+<div class="page-header">
+	<h1>Nuevo Usuario</h1>
+</div>
+<form role="form" ng-submit="crearUsuario()">
+	<div class="form-group">
+		<label for="nombre">Nombre(s)</label>
+		<input type="text" ng-model="usuario.nombre" class="form-control" id="nombre" placeholder="Ingresar nombre o nombres">
+	</div>
+	<div class="form-group">
+		<label for="ap_paterno">Apellido Paterno</label>
+		<input type="text" ng-model="usuario.ap_paterno" class="form-control" id="ap_paterno" placeholder="Ingresar apellido paterno">
+	</div>
+	<div class="form-group">
+		<label for="ap_materno">Apellido Materno</label>
+		<input type="text" ng-model="usuario.ap_materno" class="form-control" id="ap_materno" placeholder="Ingresar apellido materno">
+	</div>
+	<div class="form-group">
+		<label for="edad">Edad</label>
+		<input type="number" ng-model="usuario.edad" class="form-control" id="edad" placeholder="Ingresar edad">
+	</div>
+	<div class="form-group">
+		<label for="email">E-mail</label>
+		<input type="email" ng-model="usuario.email" class="form-control" id="email" placeholder="Ingresar e-mail">
+	</div>
+	<div class="form-group">
+		<label for="username">Nombre de Usuario</label>
+		<input type="text" ng-model="usuario.username" class="form-control" id="username" placeholder="Ingresar nombre de usuario">
+	</div>
+	<div class="form-group">
+		<label for="contrasena">Contraseña</label>
+		<input type="password" ng-model="usuario.contrasena" class="form-control" id="contrasena" placeholder="Ingresar contraseña">
+	</div>
+	<div class="form-group">
+		<label for="contrasena_confirm">Confirmar Contraseña</label>
+		<input type="password" ng-model="confirm_contrasena" class="form-control" id="contrasena_confirm" placeholder="Vuelve a ingresar la contraseña">
+	</div>
+  	<div ng-bind-html="error"></div>
+	
+	<p><hr></p>
+  	<div class="row">
+    	<div class="col-xs-6">
+      		<a href="#/cuponera" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Regresar a la Lista de Cupones</a>
+    	</div>
+    	<div class="col-xs-6">
+      		<button class="btn btn-primary pull-right" type="submit">Registrarse</button>
+    	</div>
+  	</div>
+  	<p>&nbsp;</p>
+</form>

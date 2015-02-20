@@ -1,0 +1,30 @@
+doctype html
+html(lang='en', ng-app='cuponeraFlow')
+	head
+		meta(charset='UTF-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
+		title= title
+		link(rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css')
+		link(rel='stylesheet' href='/stylesheets/style.css')
+		script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js')
+		script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.min.js')
+		script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
+		script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js')
+		script(src='/javascripts/app.js')
+		script(src='/javascripts/controller.js')
+		script(src='/javascripts/service.js')
+		script(src='/socket.io/socket.io.js')
+		script(src='/javascripts/flow.js')
+		script(src='/javascripts/ng-flow-master/dist/ng-flow.js')
+		script(src='/javascripts/ng-flow-master/dist/ng-flow-standalone.js')
+	body(ng-controller="CuponImagenController")
+		nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+			div.navbar-header
+				a.navbar-brand(href='#/cuponera') CUPONERA
+			ul.nav.navbar-nav
+				li
+					a(href='#/upload') upload
+				li
+					a(href='#/imagenes') Imagenes
+		div.container
+			div(ng-view)

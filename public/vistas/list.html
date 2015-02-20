@@ -1,0 +1,23 @@
+<div class="page-header">
+  <h1>Change Control</h1>
+</div>
+<div class="row">
+  <div class="col-xs-5">
+    <a href="#/new" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Nuevo Cupón</a>
+  </div>
+  <div class="col-xs-7">
+    <input type="text" class="form-control" ng-model="query" placeholder="Buscar en los cupones">
+  </div>
+</div>
+<div class="row"><div class="col-xs-12"><hr></div></div>
+<div class="row" ng-switch on="cupones.length">
+  <ul ng-switch-when="0">
+    <li><em>No hay cupones guardados. ¿Quieres <a href="#/new">crear un cupón</a>?</li>
+  </ul>
+  <ul ng-switch-default>
+    <li ng-repeat="cupon in cupones | filter:query">
+      <a href="#/cuponera/{{cupon._id}}">{{cupon.name}}</a>
+    </li>
+  </ul>
+</div>
+<p>&nbsp;</p>
