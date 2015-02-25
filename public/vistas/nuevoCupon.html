@@ -4,27 +4,30 @@
 <form role="form" ng-submit="nuevoCupon()" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="fecha_validez">Fecha de caducidad</label>
-		<input type="date" ng-model="cupon.fecha_validez" class="form-control" name="fecha_validez" placeholder="Fecha de caducidad del cupón"><br>
+		<input type="date" ng-model="fecha_validez" class="form-control" name="fecha_validez" placeholder="Fecha de caducidad del cupón"><br>
 	</div>
-  	<div class="form-group">
-    	<label>Imagen</label>
-		<input type="file" name="imagen" id="imagen" file-model="imagen" flow-btn class="form-control" placeholder="Imagen"><br>
-  	</div>
-  	<div class="form-group">
-  		<div class="container">
-  			<div class="thumbnail" ng-hide="$flow.files.length">
-     			<img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=Sin+imagen" />
-    		</div>
-    		<div class="thumbnail" ng-show="$flow.files.length">
-      			<img flow-img="$flow.files[0]" />
-    		</div>
-    		<div>
-    			<a href="#" class="btn btn-primary" ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Seleccionar una imagen</a>
-		      	<a href="#" class="btn" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Change</a>
-		      	<a href="#" class="btn btn-danger" ng-show="$flow.files.length" ng-click="$flow.cancel()">Remove</a>
-    		</div>
-    		<p>Only PNG,GIF,JPG files allowed.</p>
-		</div>
+<!--   	<div class="form-group"> -->
+<!--     	<label>Imagen</label> -->
+<!-- 		<input type="file" name="imagen" id="imagen" file-model="imagen" flow-btn class="form-control"><br> -->
+<!--   	</div> -->
+  	<div class="row">
+   		<div class="col-md-6">
+	   		<div class="thumbnail" ng-hide="$flow.files.length">
+	    		<img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=Sin+imagen" />
+	   		</div>
+	   		<div class="thumbnail" ng-show="$flow.files.length">
+	     			<img flow-img="$flow.files[0]" />
+	   		</div>
+   		</div>
+   		<div class="col-md-6">
+   			<div>
+	   			<button class="btn btn-success" ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}" file-model="imagen">Seleccionar una imagen</button>
+<!-- 		      	<button class="btn btn-warning" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}" file-model="imagen">Cambiar imagen</button> -->
+		      	<button class="btn btn-danger" ng-show="$flow.files.length" ng-click="$flow.cancel()">Eliminar imagen</button>
+	   		</div>
+	   		<br/>
+   			<p>Only PNG,GIF,JPG files allowed.</p>
+   		</div>
   	</div>
   	
   	<p><hr></p>

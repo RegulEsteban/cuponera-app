@@ -97,14 +97,13 @@ function CuponUploadController($scope, $http, $location){
 	$scope.nuevoCupon = function(){
 		$scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
 		  event.preventDefault();
-		  console.log('asas');
 		});
 		
-//		var file = $scope.imagen;
-//		console.log(file);
-//        var fd = new FormData();
-//        fd.append('file', file);
-//		//var obj = {autor: $scope.autor, content: $scope.content, file: file};
+		var file = $scope.imagen;
+		console.log(file);
+        var fd = new FormData();
+        fd.append('file', file);
+//		var obj = {autor: $scope.autor, content: $scope.content, file: file};
 //		$http.post('/upload', fd, {
 //            transformRequest: angular.identity,
 //            headers: {'Content-Type': undefined}
@@ -120,5 +119,7 @@ function CuponUploadController($scope, $http, $location){
 }
 
 function CuponesController($scope){
-    
+    $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
+      //event.preventDefault();
+    });
 }

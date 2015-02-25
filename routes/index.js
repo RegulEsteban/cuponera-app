@@ -70,7 +70,7 @@ exports.findUsuarioId = function(req, res){
     });
 };
 
-/*exports.upload = function(req, res, next){
+exports.upload = function(req, res, next){
 	var input = req.body;
 	var image = req.files.file;
 
@@ -83,17 +83,17 @@ exports.findUsuarioId = function(req, res){
     input.imageType = image.type;
     input.imageName = image.name;
     
-    var imagenCupon = new ImagenCupon(input);
-    imagenCupon.save(function(err,file){
+    var cupon = new Cupon(input);
+    cupon.save(function(err,file){
     	if(err || !file){
     		throw 'Error al guardar imagen';
     	}else{
-    		ImagenCupon.findById(imagenCupon, function(err,doc){
+    		Cupon.findById(imagenCupon, function(err,doc){
     			res.json(doc);
     		});
     	}
     });
-};*/
+};
 
 exports.list = function(req, res) {
   Cupon.find({}, 'anuncioText', function(error, cupones) {

@@ -35,7 +35,7 @@ app.get('/cuponera/cuponera', routes.list);
 //app.get('/cuponera/:id', routes.cupon);
 //app.get('/imagenes', routes.imagenes);
 //app.post('/cuponera', routes.create);
-//app.post('/upload', routes.upload);
+app.post('/upload', routes.upload);
 app.get('/usuarios/usuarios', routes.usuariosList);
 app.get('usuarios/:id', routes.findUsuarioId);
 app.post('/usuarios', routes.creaUsuarios);

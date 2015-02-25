@@ -1,6 +1,5 @@
 doctype html
-html(lang='en', ng-app='cuponeraApp' flow-init="{target: '/admin/upload'}" 
-								  flow-file-added='!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]')
+html(lang='en', ng-app='cuponeraApp' flow-init flow-file-added='!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]')
 	head
 		meta(charset='utf-8')
 		meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
@@ -21,7 +20,7 @@ html(lang='en', ng-app='cuponeraApp' flow-init="{target: '/admin/upload'}"
 		script(src='/javascripts/service.js')
 		script(src='/socket.io/socket.io.js')
 		
-	body(ng-controller="CuponUploadController" flow-prevent-drop
+	body(ng-controller="CuponesController" flow-prevent-drop
       flow-drag-enter="style={border: '5px solid green'}"
       flow-drag-leave="style={}"
       ng-style="style")
