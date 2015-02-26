@@ -94,32 +94,44 @@ function CuponItemController($scope, $routeParams, socket, Cupon){
 }
 
 function CuponUploadController($scope, $http, $location){
-	$scope.nuevoCupon = function(){
-		$scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
-		  event.preventDefault();
-		});
-		
+    $scope.imagen = '';
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+    if(dd<10) {
+        dd='0'+dd;
+    } 
+    if(mm<10) {
+        mm='0'+mm;
+    } 
+    today = yyyy+'-'+mm+'-'+dd;
+    $scope.fecha_validez = today;
+	
+    $scope.nuevoCupon = function(){	    
+        $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
+            event.preventDefault();
+            
+        });
 		var file = $scope.imagen;
 		console.log(file);
         var fd = new FormData();
         fd.append('file', file);
-//		var obj = {autor: $scope.autor, content: $scope.content, file: file};
-//		$http.post('/upload', fd, {
-//            transformRequest: angular.identity,
-//            headers: {'Content-Type': undefined}
-//        })
-//        .success(function(data) {
-//            alert('excelente: '+data._id);
-//            $location.path('cuponera');
-//        })
-//        .error(function(data) {
-//            console.log('Error: ');
-//        });
+		
+		$http.post('/upload', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(data) {
+            alert('excelente: '+data._id);
+            $location.path('cuponera');
+        })
+        .error(function(data) {
+            console.log('Error: '+data);
+        });
 	};
 }
 
 function CuponesController($scope){
-    $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
-      //event.preventDefault();
-    });
+    
 }

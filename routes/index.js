@@ -73,26 +73,37 @@ exports.findUsuarioId = function(req, res){
 exports.upload = function(req, res, next){
 	var input = req.body;
 	var image = req.files.file;
-
-    if (input._id) {
+	console.log(req);
+	//var stream = fs.createWriteStream(input.flowFilename);
+	//console.log(stream);
+	
+	if (input._id) {
         input._id = new ObjectID(input._id);
     }
-
+	
+	var fecha = input.fecha_validez,
+	    cupon_get = {nombre: input.name, extension: image.type, imagen_binary: new Binary(image.path), 
+	                imagen: fs.readFileSync(image.path), fecha_validez: fecha};
+    
     //input.image = new Binary(data);
     input.image = fs.readFileSync(image.path);
     input.imageType = image.type;
     input.imageName = image.name;
     
-    var cupon = new Cupon(input);
+    var cupon = new Cupon(cupon_get);
     cupon.save(function(err,file){
     	if(err || !file){
     		throw 'Error al guardar imagen';
     	}else{
-    		Cupon.findById(imagenCupon, function(err,doc){
+    		Cupon.findById(cupon, function(err,doc){
     			res.json(doc);
     		});
     	}
     });
+};
+
+exports.uploadCupon = function(req, res){    
+    res.send(200, req.status);
 };
 
 exports.list = function(req, res) {
@@ -106,7 +117,7 @@ exports.list = function(req, res) {
 };
 
 /*exports.imagenes = function(req, res) {
-	ImagenCupon.findOne({ 'imageName' : 'cp_110914.png' }, function(error, result){
+	Cupon.findOne({ 'imageName' : 'cp_110914.png' }, function(error, result){
 		if(!error || result){
 			var b = new Buffer(result.image).toString('base64');
 			//res.contentType(result.imageType);
@@ -115,23 +126,23 @@ exports.list = function(req, res) {
 			res.json(respuesta);
 		}
 	});
-};
+};*/
 
 exports.imagenes = function(req, res) {
-	ImagenCupon.find({}, '', function(error, result){
+	Cupon.find({}, '', function(error, result){
 		if(!error || result){
 			var i = 0, stop = result.length, respuesta;
             for (i; i < stop; i++)
             {
-            	var b = new Buffer(result[i].image).toString('base64');
-            	result[i].imageName = result[i].imageName;
+            	var b = new Buffer(result[i].imagen).toString('base64');
+            	result[i].imageName = result[i].nombre;
             	result[i]._id = result[i]._id;
-            	result[i].binaryImage = 'data:'+result[i].imageType+';base64,'+b;
+            	result[i].binaryImage = 'data:'+result[i]+';base64,'+b;
             }
             res.json(result);
 		}
 	});
-};*/
+};
 
 exports.cupon = function(req, res){
 	var cuponId = req.params.id;

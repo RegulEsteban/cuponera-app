@@ -33,7 +33,7 @@ if ('development' === app.get('env')) {
 app.get('/', routes.index);
 app.get('/cuponera/cuponera', routes.list);
 //app.get('/cuponera/:id', routes.cupon);
-//app.get('/imagenes', routes.imagenes);
+app.get('/imagenes', routes.imagenes);
 //app.post('/cuponera', routes.create);
 app.post('/upload', routes.upload);
 app.get('/usuarios/usuarios', routes.usuariosList);

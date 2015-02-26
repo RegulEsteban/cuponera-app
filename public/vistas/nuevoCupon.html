@@ -6,30 +6,36 @@
 		<label for="fecha_validez">Fecha de caducidad</label>
 		<input type="date" ng-model="fecha_validez" class="form-control" name="fecha_validez" placeholder="Fecha de caducidad del cupón"><br>
 	</div>
-<!--   	<div class="form-group"> -->
-<!--     	<label>Imagen</label> -->
-<!-- 		<input type="file" name="imagen" id="imagen" file-model="imagen" flow-btn class="form-control"><br> -->
-<!--   	</div> -->
+  	<div class="form-group">
+    	<label>Imagen</label>
+		<br>
+  	</div>
   	<div class="row">
    		<div class="col-md-6">
-	   		<div class="thumbnail" ng-hide="$flow.files.length">
-	    		<img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=Sin+imagen" />
+	   		<div class="thumbnail" ng-hide="$flow.files.length" >
+	    		<img src="http://www.placehold.it/300x300/EFEFEF/AAAAAA&text=Sin+imagen" />
 	   		</div>
 	   		<div class="thumbnail" ng-show="$flow.files.length">
-	     			<img flow-img="$flow.files[0]" />
+	     		<img flow-img="$flow.files[0]" />
 	   		</div>
    		</div>
    		<div class="col-md-6">
+   			<div class="btn btn-success inputWrapper" ng-hide="$flow.files.length">
+    			Seleccionar imagen <input type="file" name="imagen" id="imagen" file-model="imagen" flow-btn class="form-control fileInput"><br/>
+    		</div>
+<!--     		<div class="btn btn btn-warning inputWrapper" ng-show="$flow.files.length"> -->
+<!--     			Cambiar imagen <input type="file" name="imagen" id="imagen" file-model="imagen" flow-btn class="form-control fileInput"><br/> -->
+<!--     		</div> -->
+    		<button type="button" class="btn btn-danger" ng-show="$flow.files.length" ng-click="$flow.cancel()">Eliminar imagen</button>
    			<div>
-	   			<button class="btn btn-success" ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}" file-model="imagen">Seleccionar una imagen</button>
-<!-- 		      	<button class="btn btn-warning" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}" file-model="imagen">Cambiar imagen</button> -->
-		      	<button class="btn btn-danger" ng-show="$flow.files.length" ng-click="$flow.cancel()">Eliminar imagen</button>
+<!-- 	   			<button type="button" class="btn btn-success" ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Seleccionar una imagen</button> -->
+<!-- 		      	<button type="button" class="btn btn-warning" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Cambiar imagen</button> -->
+		      	
 	   		</div>
 	   		<br/>
    			<p>Only PNG,GIF,JPG files allowed.</p>
    		</div>
   	</div>
-  	
   	<p><hr></p>
   
   	<div class="row">
@@ -37,7 +43,8 @@
       		<a href="#/cuponera" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Regresar a la Lista de Cupones</a>
     	</div>
     	<div class="col-xs-6">
-      		<button class="btn btn-primary pull-right" type="submit" ng-click="$flow.upload()">Crear Nuevo Cupón &raquo;</button>
+      		<button class="btn btn-primary pull-right" type="submit" >Crear Nuevo Cupón &raquo;</button>
+<!--       		ng-click="$flow.upload()" -->
     	</div>
   	</div>
   <p>&nbsp;</p>
