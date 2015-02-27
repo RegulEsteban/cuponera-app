@@ -60,6 +60,16 @@ angular.module('cuponeraApp',['ngRoute', 'flow', 'cuponService']).
       });
     };
 }])
+.directive("ngFileSelect",function(){
+  return {
+    link: function($scope,el){
+      el.bind("change", function(e){
+        $scope.file = (e.srcElement || e.target).files[0];
+        $scope.getFile();
+      });
+    }
+  };
+})
 //.config(['flowFactoryProvider', function (flowFactoryProvider) {
 //    flowFactoryProvider.defaults = {
 //        target: '/upload',

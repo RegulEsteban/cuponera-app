@@ -93,7 +93,9 @@ function CuponItemController($scope, $routeParams, socket, Cupon){
 	};
 }
 
-function CuponUploadController($scope, $http, $location){
+function CuponUploadController($scope, $http, $location, fileReader){
+    $scope.active = '';
+    $scope.showButton = true;
     $scope.imagen = '';
     var today = new Date();
     var dd = today.getDate();
@@ -107,23 +109,37 @@ function CuponUploadController($scope, $http, $location){
     } 
     today = yyyy+'-'+mm+'-'+dd;
     $scope.fecha_validez = today;
-	
-    $scope.nuevoCupon = function(){	    
-        $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
-            event.preventDefault();
-            
+    
+    $scope.getFile = function () {
+        $scope.progress = 0;
+        fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
+            $scope.imageSrc = result;
+            $scope.showButton = false;
+            $scope.active = '';
         });
+    };
+    $scope.$on("fileProgress", function(e, progress) {
+        $scope.progress = progress.loaded / progress.total;
+        $scope.active = 'active';
+    });
+    
+    $scope.removeImage = function(){
+        $scope.imageSrc = '';
+        $scope.showButton = true;
+    };
+	
+    $scope.nuevoCupon = function(){
 		var file = $scope.imagen;
 		console.log(file);
         var fd = new FormData();
         fd.append('file', file);
-		
+        fd.append('fecha', $scope.fecha_validez);
 		$http.post('/upload', fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
         })
         .success(function(data) {
-            alert('excelente: '+data._id);
+            alert('¡Cupón registrado exitósamente!');
             $location.path('cuponera');
         })
         .error(function(data) {

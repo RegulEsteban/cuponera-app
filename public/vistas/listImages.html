@@ -1,24 +1,24 @@
 <div class="page-header">
-  <h1>Imagenes</h1>
+	<h1>Images Stored MongoDB</h1>
 </div>
 <div class="row">
-  <div class="col-xs-5">
-    <a href="#/new" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Nuevo Cupón</a>
-  </div>
-  <div class="col-xs-7">
-    <input type="text" class="form-control" ng-model="query" placeholder="Buscar en los cupones">
-  </div>
+	<div class="col-xs-5">
+    	<a href="#/new" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Nuevo CupÃ³n</a>
+  	</div>
+  	<div class="col-xs-7">
+    	<input type="text" class="form-control" ng-model="query" placeholder="Buscar en los cupones">
+  	</div>
 </div>
 <div class="row"><div class="col-xs-12"><hr></div></div>
 <div class="row" ng-switch on="cupones.length">
-  <ul ng-switch-when="0">
-    <li><em>No hay cupones guardados. ¿Quieres <a href="#/new">crear un cupón</a>?</li>
-  </ul>
-  <ul ng-switch-default>
-    <li ng-repeat="cupon in cupones | filter:query">
-      <a href="#/cuponera/{{cupon._id}}">{{cupon.imageName}}</a>
-      <img ng-src="{{cupon.binaryImage}}" class="img-responsive" alt="Responsive image"/>
-    </li>
-  </ul>
+	<ul ng-switch-when="0">
+		<li><em>No hay cupones guardados. Â¿Quieres <a href="#/new">registrar un cupÃ³n</a>?</li>
+	</ul>
+	<ul ng-switch-default>
+		<li ng-repeat="cupon in cupones | filter:query">
+	  		<a href="#/cuponera/{{cupon._id}}">{{cupon.nombre}}</a>
+	  		<img ng-src="{{cupon.binaryImage}}" class="thumbnail" alt="{{cupon.nombre}}"/>
+		</li>
+	</ul>
 </div>
 <p>&nbsp;</p>

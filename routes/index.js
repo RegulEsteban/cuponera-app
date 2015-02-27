@@ -71,24 +71,16 @@ exports.findUsuarioId = function(req, res){
 };
 
 exports.upload = function(req, res, next){
-	var input = req.body;
 	var image = req.files.file;
+	var input = req.body;
+	var id_user;
 	console.log(req);
-	//var stream = fs.createWriteStream(input.flowFilename);
-	//console.log(stream);
+	Usuario.findOne({ 'nombre' : 'Esteban' }).exec().then(function (usuario) {
+	    id_user = usuario._id;
+     });
 	
-	if (input._id) {
-        input._id = new ObjectID(input._id);
-    }
-	
-	var fecha = input.fecha_validez,
-	    cupon_get = {nombre: input.name, extension: image.type, imagen_binary: new Binary(image.path), 
-	                imagen: fs.readFileSync(image.path), fecha_validez: fecha};
-    
-    //input.image = new Binary(data);
-    input.image = fs.readFileSync(image.path);
-    input.imageType = image.type;
-    input.imageName = image.name;
+	var cupon_get = {nombre: image.name, extension: image.type, imagen_binary: new Binary(image.path), 
+	                imagen: fs.readFileSync(image.path), fecha_validez: input.fecha, id_usuario: new ObjectID(id_user)};
     
     var cupon = new Cupon(cupon_get);
     cupon.save(function(err,file){
@@ -107,7 +99,7 @@ exports.uploadCupon = function(req, res){
 };
 
 exports.list = function(req, res) {
-  Cupon.find({}, 'anuncioText', function(error, cupones) {
+  Cupon.find({}, 'nombre', function(error, cupones) {
       if(error){
           throw 'Error al buscar los cupones';
       }else{
@@ -131,15 +123,16 @@ exports.list = function(req, res) {
 exports.imagenes = function(req, res) {
 	Cupon.find({}, '', function(error, result){
 		if(!error || result){
-			var i = 0, stop = result.length, respuesta;
-            for (i; i < stop; i++)
+			var i = 0, stop = result.length, respuesta = new Array(result.length);
+            for (i; i < stop; i=i+1)
             {
             	var b = new Buffer(result[i].imagen).toString('base64');
-            	result[i].imageName = result[i].nombre;
-            	result[i]._id = result[i]._id;
-            	result[i].binaryImage = 'data:'+result[i]+';base64,'+b;
+//            	respuesta[i].nombre = result[i].nombre;
+//            	respuesta[i]._id = result[i]._id;
+//            	respuesta[i].imagen = 'data:'+result[i].extension+';base64,'+b;
+            	respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+b, nombre: result[i].nombre, _id: result[i]._id };
             }
-            res.json(result);
+            res.json(respuesta);
 		}
 	});
 };

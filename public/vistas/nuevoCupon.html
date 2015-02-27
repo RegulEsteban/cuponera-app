@@ -12,31 +12,33 @@
   	</div>
   	<div class="row">
    		<div class="col-md-6">
-	   		<div class="thumbnail" ng-hide="$flow.files.length" >
+	   		<div class="thumbnail" ng-show="showButton" >
 	    		<img src="http://www.placehold.it/300x300/EFEFEF/AAAAAA&text=Sin+imagen" />
 	   		</div>
-	   		<div class="thumbnail" ng-show="$flow.files.length">
-	     		<img flow-img="$flow.files[0]" />
+	   		<div class="thumbnail" ng-hide="showButton">
+	     		<img ng-src="{{imageSrc}}" />
 	   		</div>
    		</div>
    		<div class="col-md-6">
-   			<div class="btn btn-success inputWrapper" ng-hide="$flow.files.length">
-    			Seleccionar imagen <input type="file" name="imagen" id="imagen" file-model="imagen" flow-btn class="form-control fileInput"><br/>
+   			<div class="btn btn-success inputWrapper" ng-show="showButton">
+    			Seleccionar imagen <input type="file" file-model="imagen" name="imagen" id="imagen" class="form-control fileInput" ng-file-select="onFileSelect($files)"><br/>
     		</div>
-<!--     		<div class="btn btn btn-warning inputWrapper" ng-show="$flow.files.length"> -->
-<!--     			Cambiar imagen <input type="file" name="imagen" id="imagen" file-model="imagen" flow-btn class="form-control fileInput"><br/> -->
-<!--     		</div> -->
-    		<button type="button" class="btn btn-danger" ng-show="$flow.files.length" ng-click="$flow.cancel()">Eliminar imagen</button>
+    		<button type="button" class="btn btn-danger" ng-hide="showButton" ng-click="removeImage()">Eliminar imagen</button>
    			<div>
 <!-- 	   			<button type="button" class="btn btn-success" ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Seleccionar una imagen</button> -->
 <!-- 		      	<button type="button" class="btn btn-warning" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Cambiar imagen</button> -->
-		      	
 	   		</div>
 	   		<br/>
    			<p>Only PNG,GIF,JPG files allowed.</p>
    		</div>
   	</div>
-  	<p><hr></p>
+  	<div class="progress" ng-hide="showButton">
+  		<div class="progress-bar progress-bar-striped {{active}}" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress*100}}%">
+    		<span class="sr-only">{{progress*100}}% Complete</span>
+  		</div>
+	</div>
+  	
+  	<p><hr/></p>
   
   	<div class="row">
     	<div class="col-xs-6">
@@ -44,7 +46,6 @@
     	</div>
     	<div class="col-xs-6">
       		<button class="btn btn-primary pull-right" type="submit" >Crear Nuevo Cupón &raquo;</button>
-<!--       		ng-click="$flow.upload()" -->
     	</div>
   	</div>
   <p>&nbsp;</p>

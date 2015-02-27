@@ -69,7 +69,7 @@ exports.CuponSchema = new mongoose.Schema({
     imagen: Buffer,
     imagen_binary: String,
     fecha_validez: Date,
-    id_usuario: { type : mongoose.Schema.Types.ObjectId, ref : 'usuario' },
+    id_usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'usuario' },
     comentarios: [comentario_cupon_usuario],
     favoritos: [favorito_cupon_usuario]
 });
