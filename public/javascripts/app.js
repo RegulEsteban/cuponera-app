@@ -18,7 +18,7 @@ angular.module('cuponeraApp',['ngRoute', 'flow', 'cuponService']).
 			controller: CuponUploadController
 		}).
 		when('/imagenes', {
-			templateUrl: 'vistas/listImages.html',
+			templateUrl: 'vistas/listCupones.html',
 			controller: CuponImagenController
 		}).
 		when('/nuevoUsuario', {

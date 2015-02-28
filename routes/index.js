@@ -74,7 +74,7 @@ exports.upload = function(req, res, next){
 	var image = req.files.file;
 	var input = req.body;
 	var id_user;
-	console.log(req);
+
 	Usuario.findOne({ 'nombre' : 'Esteban' }).exec().then(function (usuario) {
 	    id_user = usuario._id;
      });
@@ -127,9 +127,6 @@ exports.imagenes = function(req, res) {
             for (i; i < stop; i=i+1)
             {
             	var b = new Buffer(result[i].imagen).toString('base64');
-//            	respuesta[i].nombre = result[i].nombre;
-//            	respuesta[i]._id = result[i]._id;
-//            	respuesta[i].imagen = 'data:'+result[i].extension+';base64,'+b;
             	respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+b, nombre: result[i].nombre, _id: result[i]._id };
             }
             res.json(respuesta);
@@ -206,4 +203,44 @@ exports.votar = function(socket){
 			});
 		});
 	});
+};
+
+exports.doComentoByCupon = function(socket){
+    socket.on('send:comentar', function(data){
+        var id_user;
+        Cupon.findById(data.cupon_id, function(err, cupon){
+            Usuario.findOne({ 'nombre' : 'Esteban' }).exec().then(function (usuario) {
+                id_user = usuario._id;
+            });
+            cupon.comentarios.push({descripcion: data.comment_cupon, id_usuario: new ObjectID(id_user)});
+            cupon.save(function(err, doc){
+                var comentariosDoc = { _id: doc._id, comentarios: doc.comentarios };
+                socket.emit('comentado', comentariosDoc);
+              });
+
+//            var eleccion = cupon.elecciones.id(data.eleccion);
+//            
+//            eleccion.votos.push({ip: ip});
+//            cupon.save(function(err, doc){
+//                var theDoc = {anuncioText: doc.anuncioText,
+//                            _id: doc._id,
+//                            elecciones: doc.elecciones,
+//                            votoUsuario: false, totalVotos: 0};
+//                for(var i=0, ln = doc.elecciones.length; i < ln; i++){
+//                    var eleccion = doc.elecciones[i];
+//                    for(var j = 0, jLn = eleccion.votos.length; j < jLn; j++){
+//                        var voto = eleccion.votos[j];
+//                        theDoc.totalVotos++;
+//                        theDoc.ip = ip;
+//                        if(voto.ip === ip){
+//                            theDoc.votoUsuario = true;
+//                            theDoc.eligioUsuario ={_id: eleccion._id, comentario: eleccion.comentario};
+//                        }
+//                    }
+//                }
+//                socket.emit('mivoto', theDoc);
+//                socket.broadcast.emit('votar', theDoc);
+//            });
+        });
+    });
 };

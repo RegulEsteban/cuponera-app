@@ -18,6 +18,11 @@
 		<li ng-repeat="cupon in cupones | filter:query">
 	  		<a href="#/cuponera/{{cupon._id}}">{{cupon.nombre}}</a>
 	  		<img ng-src="{{cupon.binaryImage}}" class="thumbnail" alt="{{cupon.nombre}}"/>
+	  		<input type="text" name="comentario" ng-model="comentario" class="form-control" id="comentario" placeholder="Comentar">
+	  		<button type="button" class="btn btn-primary" ng-click="doComment(cupon._id, comentario)">Comentar</button>
+	  		<li ng-repeat="coment in comentarios">
+	  			<p>{{coment.descripcion}}</p>
+	  		</li>
 		</li>
 	</ul>
 </div>

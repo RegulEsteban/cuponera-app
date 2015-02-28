@@ -28,8 +28,32 @@ function CuponListController($scope, Cupon){
 	$scope.cupones = Cupon.query();
 }
 
-function CuponImagenController($scope, ImagenCupon){
+function CuponImagenController($scope, $http, socket, ImagenCupon){
 	$scope.cupones = ImagenCupon.query();
+	$scope.comentario = '';
+
+	socket.on('comentado', function(data){
+	    $scope.comentarios = data.comentarios;
+	});
+	
+	$scope.doComment = function(id, coment){
+	    var comentObj = {cupon_id: id, comment_cupon: coment};
+        socket.emit('send:comentar', comentObj);
+
+//	    var fd = new FormData();
+//        fd.append('id_cupon', id);
+//        fd.append('comment_cupon', coment);
+//        $http.post('/comentar', fd, {
+//            transformRequest: angular.identity,
+//            headers: {'Content-Type': undefined}
+//        })
+//        .success(function(data) {
+//            alert('¡Comentario '+data+'!');
+//        })
+//        .error(function(data) {
+//            console.log('Error: '+data);
+//        });
+	};
 }
 
 function CuponNewController($scope, $location, Cupon){
@@ -130,7 +154,6 @@ function CuponUploadController($scope, $http, $location, fileReader){
 	
     $scope.nuevoCupon = function(){
 		var file = $scope.imagen;
-		console.log(file);
         var fd = new FormData();
         fd.append('file', file);
         fd.append('fecha', $scope.fecha_validez);

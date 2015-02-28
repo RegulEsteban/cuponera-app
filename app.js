@@ -39,10 +39,12 @@ app.post('/upload', routes.upload);
 app.get('/usuarios/usuarios', routes.usuariosList);
 app.get('usuarios/:id', routes.findUsuarioId);
 app.post('/usuarios', routes.creaUsuarios);
+//app.post('/comentar', routes.doComentoByCupon);
 
 app.get('/users', user.list);
 
 io.sockets.on('connection', routes.votar);
+io.sockets.on('connection', routes.doComentoByCupon);
 
 server.listen(app.get('port'), function(){
   console.log('Express server escuchando en el puerto ' + app.get('port'));

@@ -43,7 +43,7 @@ var ubicacionSchema = new mongoose.Schema({
 
 var comentario_cupon_usuario = new mongoose.Schema({
     descripcion: String,
-    id_usuario: { type : mongoose.Schema.Types.ObjectId, ref : 'usuario' }
+    id_usuario: {type: mongoose.Schema.Types.ObjectId, ref: 'usuario' }
 });
 
 var favorito_cupon_usuario = new mongoose.Schema({
