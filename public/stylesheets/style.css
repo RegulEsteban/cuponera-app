@@ -30,12 +30,12 @@ a {
 }
 
 .thumbnail {
-  max-width: 300px; max-height: 300px; line-height: 20px; margin-bottom: 5px;
+  max-width: 370px; max-height: 370px; line-height: 20px; margin-bottom: 5px;
 }
 
 .inputWrapper {
-    height: 32px;
-    width: 30%;
+    height: 40px;
+    width: 32%;
     overflow: hidden;
     position: relative;
     cursor: pointer;
@@ -55,4 +55,12 @@ a {
     opacity: 0;
     -moz-opacity: 0;
     filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0)
+}
+
+.avatar {
+  max-width: 50px; max-height: 50px; line-height: 20px; margin-bottom: 5px;
+}
+
+.color-star {
+    color: #F39C12;
 }

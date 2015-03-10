@@ -1,0 +1,66 @@
+<div class="page-header">
+	<h1>Nuevo Cuponero</h1>
+</div>
+<form role="form" ng-submit="addUbicaciones()">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+	    	<h2>Registrar ubicaciones</h2>
+	  	</div>
+	  	<div class="panel-body">
+			<div class="col-md-4">
+				<button type="button" class="col-md-offset-6 btn btn-primary" ng-click="agregarUbicacion()"><span class="glyphicon glyphicon-plus"></span> Agregar ubicación</button>
+				<accordion close-others="oneAtATime">
+					<div ng-repeat="ubicacion in proveedor.ubicaciones">
+						<hr>
+						<accordion-group is-open="ubicacion.status" class="panel panel-danger">
+					        <accordion-heading>
+					            <span class="glyphicon glyphicon-map-marker"></span> Ubicación {{$index+1}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': ubicacion.status, 'glyphicon-chevron-right': !ubicacion.status}"></i>
+					        </accordion-heading>
+					        <div class="form-group">
+								<label for="lat">Latitud: </label>
+								<input type="text" class="form-control" id="lat" ng-model="ubicacion.lat" readonly="readonly">
+							</div>
+							<div class="form-group">
+								<label for="lon">Longitud: </label>
+								<input type="text" class="form-control" id="lon" ng-model="ubicacion.lon" readonly="readonly">
+							</div>
+							<div class="form-group">
+								<label for="lon">Calle ó avenida: </label>
+								<input type="text" class="form-control" id="direccion" ng-model="ubicacion.direccion">
+							</div>
+					    </accordion-group>
+					</div>
+				</accordion>
+		  	</div>
+		  	<div class="col-md-8">
+		    	<ui-gmap-google-map 
+		         center="map.center"
+		         zoom="map.zoom"
+		         dragging="map.dragging"
+		         bounds="map.bounds"
+		         events="map.events"
+		         options="map.options"
+		         pan="true"
+		         control="map.control">
+					<ui-gmap-layer type="TrafficLayer" show="map.showTraffic"></ui-gmap-layer>
+					<ui-gmap-layer type="BicyclingLayer" show="map.showBicycling"></ui-gmap-layer>
+					<ui-gmap-drag-zoom keyboardkey="'alt'"></ui-gmap-drag-zoom>
+			        <ui-gmap-markers models="map.clickMarkers" coords="'self'" click="clackMarker" ></ui-gmap-markers>
+			        <ui-gmap-marker ng-repeat="m in map.markers" coords="m" icon="m.icon" click="onMarkerClicked(m)" idKey="m.id" options="m.options"></ui-gmap-marker>				
+			        <ui-gmap-marker coords="map.clickedMarker" idKey="map.clickedMarker.id" options="map.clickedMarker.options"></ui-gmap-marker>        
+				</ui-gmap-google-map>
+		  	</div>
+	  	</div>
+	</div>
+	<p><hr></p>
+  	<div class="row">
+    	<div class="col-xs-6">
+      		<a href="#/cuponera" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Regresar a la Lista de Cupones</a>
+    	</div>
+    	<div class="col-xs-6">
+      		<button class="btn btn-primary pull-right" type="submit">Guardar Ubicaciones</button>
+    	</div>
+  	</div>
+  	<p>&nbsp;</p>
+</form>
+

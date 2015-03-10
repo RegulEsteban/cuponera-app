@@ -27,26 +27,20 @@ var tipo_usuarioSchema = new mongoose.Schema({
 });
 
 var ubicacionSchema = new mongoose.Schema({
+    lat: Number,
+    lon: Number,
     direccion: String,
-    latitud_dd: Number,
-    longitud_dd: Number,
-    latitud_orientation: String,
-    latitud_degrees: Number,
-    latitud_minutes: Number,
-    latitud_secondes: Number,
-    longitud_orientation: String,
-    longitud_degrees: Number,
-    longitud_minutes: Number,
-    longitud_secondes: Number,
-    status: Number
+    status: Boolean
 });
 
 var comentario_cupon_usuario = new mongoose.Schema({
     descripcion: String,
-    id_usuario: {type: mongoose.Schema.Types.ObjectId, ref: 'usuario' }
+    fecha: Date,
+    id_usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'usuario' }
 });
 
 var favorito_cupon_usuario = new mongoose.Schema({
+    puntuacion: Number,
     id_usuario: { type : mongoose.Schema.Types.ObjectId, ref : 'usuario' }
 });
 
@@ -59,8 +53,13 @@ exports.UsuarioSchema = new mongoose.Schema({
     username: String,
     contrasena: String,
     status: Number,
+    rfc: String,
+    empresa: String,
     tipo_usuario: [tipo_usuarioSchema],
     ubicaciones: [ubicacionSchema],
+    extension_avatar: String,
+    avatar: Buffer,
+    avatar_binary: String
 });
 
 exports.CuponSchema = new mongoose.Schema({

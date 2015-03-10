@@ -11,7 +11,7 @@ factory('Cupon', function($resource) {
 }).
 factory('ImagenCupon', function($resource) {
   return $resource('/:imagenId', {}, {
-	  query: { method: 'GET', params: { imagenId: 'imagenes' }, isArray: true, headers : {'Content-Type' : 'application/json'} }
+	  query: { method: 'GET', params: { imagenId: 'imagenes' }, isArray: true }
   });
 }).
 factory('socket', function($rootScope) {

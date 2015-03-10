@@ -1,21 +1,60 @@
-function UsuariosController($scope, $sce, $location, Usuario){
+function UsuariosController($scope, $sce, $location, Usuario, $http, fileReader){
     $scope.confirm_contrasena = '';
+    $scope.active = '';
+    $scope.showButton = true;
+    $scope.imagen = '';
     $scope.usuario = {nombre: '', ap_paterno: '', ap_materno: '', edad: '', email: '', username: '',
         contrasena: '', status: 1};
+    $scope.progress = 0;
     $scope.error = $sce.trustAsHtml('');
+    
+    $scope.getFile = function () {
+        $scope.progress = 0;
+        fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
+            $scope.imageSrc = result;
+            $scope.showButton = false;
+            $scope.active = '';
+        });
+    };
+    $scope.$on("fileProgress", function(e, progress) {
+        $scope.progress = progress.loaded / progress.total;
+        $scope.active = 'active';
+    });
+    
+    $scope.removeImage = function(){
+        $scope.imageSrc = '';
+        $scope.showButton = true;
+    };
+    
     $scope.crearUsuario = function(){
         var usuario = $scope.usuario;
+        var file = $scope.imagen;
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('usuario', angular.toJson(usuario));
+
         if($scope.confirm_contrasena != usuario.contrasena){
             $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >Las <strong>contraseñas</strong> no coinciden.</div>");
         }else{
-            var nuevoUsuario=new Usuario(usuario);
-            nuevoUsuario.$save(function (error, resp){
-                if(!error.error){
-                    $location.path('usuarios');
-                }else{
-                    alert('No se pudo crear el usuario, lo sentimos. :');
-                }
+            $http.post('/usuarios', fd, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            })
+            .success(function(data) {
+                alert('¡Usuario registrado exitósamente!');
+                $location.path('usuarios');
+            })
+            .error(function(data) {
+                console.log('Error: '+data);
             });
+//            var nuevoUsuario=new Usuario(usuario);
+//            nuevoUsuario.$save(function (error, resp){
+//                if(!error.error){
+//                    $location.path('usuarios');
+//                }else{
+//                    alert('No se pudo crear el usuario, lo sentimos. :');
+//                }
+//            });
         }
     };
 }
@@ -29,31 +68,35 @@ function CuponListController($scope, Cupon){
 }
 
 function CuponImagenController($scope, $http, socket, ImagenCupon){
+
 	$scope.cupones = ImagenCupon.query();
 	$scope.comentario = '';
-
-	socket.on('comentado', function(data){
-	    $scope.comentarios = data.comentarios;
-	});
+	$scope.start = 0;
+	$scope.end = 5;
+	$scope.rate = 0;
 	
-	$scope.doComment = function(id, coment){
-	    var comentObj = {cupon_id: id, comment_cupon: coment};
-        socket.emit('send:comentar', comentObj);
-
-//	    var fd = new FormData();
-//        fd.append('id_cupon', id);
-//        fd.append('comment_cupon', coment);
-//        $http.post('/comentar', fd, {
-//            transformRequest: angular.identity,
-//            headers: {'Content-Type': undefined}
-//        })
-//        .success(function(data) {
-//            alert('¡Comentario '+data+'!');
-//        })
-//        .error(function(data) {
-//            console.log('Error: '+data);
-//        });
+	$scope.doComment = function(id, coment, list){
+	    var fd = new FormData();
+        fd.append('id_cupon', id);
+        fd.append('comentario', coment);
+        fd.append('fecha', new Date());
+        $http.post('/comentar', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(data) {
+            $scope.comentario = '';
+            list.push(data);
+            $scope.end = $scope.end + 1;
+        })
+        .error(function(data) {
+            console.log('Error: '+data);
+        });
 	};
+	
+	$scope.vieMoreComents = function(){
+	    $scope.end = $scope.end + 5;
+    };
 }
 
 function CuponNewController($scope, $location, Cupon){
@@ -121,6 +164,7 @@ function CuponUploadController($scope, $http, $location, fileReader){
     $scope.active = '';
     $scope.showButton = true;
     $scope.imagen = '';
+    $scope.progress = 0;
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1;
@@ -169,6 +213,60 @@ function CuponUploadController($scope, $http, $location, fileReader){
             console.log('Error: '+data);
         });
 	};
+}
+
+function ProveedorController($scope, $sce, $location, Usuario, $http, fileReader){
+    $scope.confirm_contrasena = '';
+    $scope.active = '';
+    $scope.showButton = true;
+    $scope.imagen = '';
+    $scope.usuario = {nombre: '', ap_paterno: '', ap_materno: '', edad: '', email: '', username: '',
+            contrasena: '', status: 1, rfc: '', empresa: ''};
+    $scope.progress = 0;
+    $scope.error = $sce.trustAsHtml('');
+    
+    $scope.getFile = function () {
+        $scope.progress = 0;
+        fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
+            $scope.imageSrc = result;
+            $scope.showButton = false;
+            $scope.active = '';
+        });
+    };
+    $scope.$on("fileProgress", function(e, progress) {
+        $scope.progress = progress.loaded / progress.total;
+        $scope.active = 'active';
+    });
+    
+    $scope.removeImage = function(){
+        $scope.imageSrc = '';
+        $scope.showButton = true;
+    };
+    
+    $scope.crearUsuario = function(){
+        var usuario = $scope.usuario;
+        var file = $scope.imagen;
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('usuario', angular.toJson(usuario));
+
+        if($scope.confirm_contrasena != usuario.contrasena){
+            $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >Las <strong>contraseñas</strong> no coinciden.</div>");
+        }else{
+            $http.post('/nuevoProveedor', fd, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            })
+            .success(function(data) {
+                alert('¡Cuponero registrado exitósamente!');
+                console.log(data);
+                $location.path('/addUbicaciones').search({id_user: 'asdfghjkl'});
+            })
+            .error(function(data) {
+                console.log('Error: '+data);
+            });
+        }
+    };
 }
 
 function CuponesController($scope){

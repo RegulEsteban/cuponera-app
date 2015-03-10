@@ -4,8 +4,7 @@ html(lang='en', ng-app='cuponeraApp')
 		meta(charset='utf-8')
 		meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
 		title= title
-		//link(rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css')
-		link(href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/flatly/bootstrap.min.css", rel="stylesheet")
+		link(rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css')
 		link(rel='stylesheet' href='/stylesheets/style.css')
 		link(rel='stylesheet' href='/stylesheets/cupones-images.css')
 		link(rel='stylesheet' href='/stylesheets/example.css')
@@ -15,32 +14,27 @@ html(lang='en', ng-app='cuponeraApp')
 		script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-route.js')
 		script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js')
 		script(src='//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+		
+		script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
 
 		script(src='/javascripts/app.js')
 		script(src='/javascripts/controller.js')
 		script(src='/javascripts/service.js')
 		script(src='/socket.io/socket.io.js')
 		
-		script(src='//maps.googleapis.com/maps/api/js?v=3.exp&language=es' type='text/javascript')
+		script(src='//maps.googleapis.com/maps/api/js?v=3.exp&language=es')
 		script(src='/javascripts/src/angular-google-maps_dev_mapped.min.js')
 		script(src='/javascripts/src/dev_deps.js')
 		script(src='/javascripts/src/heat-layer.js')
 		script(src='/javascripts/src/lodash.min.js')
-		script(src='/javascripts/src/angular-messages.js')
-		script(src='/javascripts/src/satellizer.js')
-		script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
-		script(src='/javascripts/bootstrap/ui-bootstrap-custom-0.12.1.js')
-		script(src='/javascripts/bootstrap/ui-bootstrap-custom-0.12.1.min.js')
-		script(src='/javascripts/bootstrap/ui-bootstrap-custom-tpls-0.12.1.js')
-		script(src='/javascripts/bootstrap/ui-bootstrap-custom-tpls-0.12.1.min.js')
 		
-	body(ng-controller="CuponesController" ng-style="style")
+	body(ng-controller="ProveedorController" ng-style="style")
 		nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
 			div.navbar-header.page-scroll
-				a.navbar-brand.page-scroll(href='#/cuponera') CPNS
+				a.navbar-brand.page-scroll(href='#/cuponera') CUPONERA
 			ul.nav.navbar-nav
 				li
-					a(href='#/usuarios') Usuarios
+					a(href='#/upload') Registrar Cupón
 				li
 					a(href='#/imagenes') Cupones
 				li
@@ -48,6 +42,6 @@ html(lang='en', ng-app='cuponeraApp')
 				li
 					a(href='#/nuevoCupon') Registrar Cupón
 				li
-					a(href='#/nuevoProveedor') Registrar Proveedor
+					a(href='/nuevoProveedor') Registrar Proveedor
 		div.container
 			div(ng-view)

@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h1>Registrar</h1>
+	<h1>Registrar Cupón</h1>
 </div>
 <form role="form" ng-submit="nuevoCupon()" enctype="multipart/form-data">
 	<div class="form-group">
@@ -13,7 +13,7 @@
   	<div class="row">
    		<div class="col-md-6">
 	   		<div class="thumbnail" ng-show="showButton" >
-	    		<img src="http://www.placehold.it/300x300/EFEFEF/AAAAAA&text=Sin+imagen" />
+	    		<img src="http://www.placehold.it/370x370/EFEFEF/AAAAAA&text=Sin+imagen" />
 	   		</div>
 	   		<div class="thumbnail" ng-hide="showButton">
 	     		<img ng-src="{{imageSrc}}" />
@@ -30,15 +30,10 @@
 	   		</div>
 	   		<br/>
    			<p>Only PNG,GIF,JPG files allowed.</p>
+   			<progressbar max="100" value="progress*100"><span style="color:white; white-space:nowrap;">{{progress*100}} / {{100}}</span></progressbar>
    		</div>
   	</div>
-  	<div class="progress" ng-hide="showButton">
-  		<div class="progress-bar progress-bar-striped {{active}}" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress*100}}%">
-    		<span class="sr-only">{{progress*100}}% Complete</span>
-  		</div>
-	</div>
-  	
-  	<p><hr/></p>
+  	<p><hr></p>
   
   	<div class="row">
     	<div class="col-xs-6">
