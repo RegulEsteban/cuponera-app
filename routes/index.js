@@ -126,13 +126,15 @@ exports.list = function(req, res) {
 };*/
 
 exports.imagenes = function(req, res) {
-    var start = new Date().getTime();
-
     var m_names = new Array("Enero", "Febrero", "Marzo","Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre","Octubre", "Noviembre", "Diciembre");    
-	Cupon.find({}).populate('comentarios.id_usuario').exec(function(error, result){
-		if(!error || result){
-			var i = 0, stop = result.length, respuesta = new Array(result.length);
-            for (i; i < stop; i=i+1)
+	Cupon.find({}).populate({
+	    path: 'comentarios.id_usuario',
+	    select: 'nombre ap_paterno extension_avatar avatar_binary',
+	    options: { limit: 1 }
+	  }).select('nombre extension imagen_binary fecha_validez comentarios').exec(function(error, result){
+		if(!error){
+			var i = 0, respuesta = new Array(result.length);
+            for (i; i < result.length; i=i+1)
             {
                 var d = result[i].fecha_validez;
                 var curr_date = d.getDate();
@@ -147,9 +149,6 @@ exports.imagenes = function(req, res) {
             res.json(respuesta);
 		}
 	});
-	var end = new Date().getTime();
-    var time = end - start;
-    console.log('Execution time: ' + time);
 };
 
 exports.cupon = function(req, res){
@@ -280,4 +279,36 @@ exports.addUbicaciones = function(req, res){
             throw err;
         }
     });
+};
+
+exports.imagenesMovil = function(req, res, next) {
+    console.log(req.headers);
+    var m_names = new Array("Enero", "Febrero", "Marzo","Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre","Octubre", "Noviembre", "Diciembre");    
+    Cupon.find({}).populate({
+        path: 'comentarios.id_usuario',
+        select: 'nombre ap_paterno extension_avatar avatar_binary',
+        options: { limit: 1 }
+      }).select('nombre extension imagen_binary fecha_validez comentarios').exec(function(error, result){
+        if(!error){
+            var i = 0, respuesta = new Array(result.length);
+            for (i; i < result.length; i=i+1)
+            {
+                var d = result[i].fecha_validez;
+                var curr_date = d.getDate();
+                var curr_month = d.getMonth();
+                var curr_year = d.getFullYear();
+                var fecha_d = curr_date + " - " + m_names[curr_month]+ " - " + curr_year;
+                respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+result[i].imagen_binary, 
+                            nombre: result[i].nombre, _id: result[i]._id, 
+                            comentarios: result[i].comentarios, 
+                            fecha_validez: fecha_d};
+            }
+            res.writeHead(200, {
+                'Content-Type': 'application/json; charset=utf-8'
+            });
+            res.end(JSON.stringify(respuesta));
+            //res.json(respuesta);
+        }
+    });
+    return next();
 };

@@ -23,7 +23,16 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.configure(function(){
+    app.use(function(req, res, next) {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.header('Access-Control-Allow-Origin', "*");
+      return next();
+    });
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
 
 // development only
 if ('development' === app.get('env')) {
@@ -34,6 +43,7 @@ app.get('/', routes.index);
 app.get('/cuponera/cuponera', routes.list);
 //app.get('/cuponera/:id', routes.cupon);
 app.get('/imagenes', routes.imagenes);
+app.get('/imagenesMovil', routes.imagenesMovil);
 //app.post('/cuponera', routes.create);
 app.post('/upload', routes.upload);
 app.get('/usuarios/usuarios', routes.usuariosList);
@@ -45,7 +55,7 @@ app.post('/addUbicaciones', routes.addUbicaciones);
 
 app.get('/users', user.list);
 
-io.sockets.on('connection', routes.votar);
+//io.sockets.on('connection', routes.votar);
 
 server.listen(app.get('port'), function(){
   console.log('Express server escuchando en el puerto ' + app.get('port'));

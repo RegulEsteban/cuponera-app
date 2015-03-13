@@ -11,6 +11,9 @@
     "mongodb": ">= 1.4.9",
     "mongoose": ">= 3.8.0",
     "socket.io": "~0.9.16",
-    "ng-flow": "*"
+    "ng-flow": "*",
+    "morgan": "^1.0.0",
+    "restify": "^2.7.0",
+    "cookie-parser": "*"
   }
 }
