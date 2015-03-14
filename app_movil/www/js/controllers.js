@@ -2,7 +2,7 @@ angular.module('cuponeraApp.controllers', [])
 
 .controller('DashCtrl', function($scope, Chats, API) {
     $scope.chats = Chats.all();
-    console.log(API.getCupones().query());
+    $scope.cupones = API.getCupones().query();
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {

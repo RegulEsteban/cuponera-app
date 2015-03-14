@@ -287,7 +287,11 @@ exports.imagenesMovil = function(req, res, next) {
         path: 'comentarios.id_usuario',
         select: 'nombre ap_paterno extension_avatar avatar_binary',
         options: { limit: 1 }
-      }).select('nombre extension imagen_binary fecha_validez comentarios').exec(function(error, result){
+      }).populate({
+          path: 'id_usuario',
+          select: 'nombre ap_paterno extension_avatar avatar_binary',
+          options: { limit: 1 }
+      }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario').exec(function(error, result){
         if(!error){
             var i = 0, respuesta = new Array(result.length);
             for (i; i < result.length; i=i+1)
