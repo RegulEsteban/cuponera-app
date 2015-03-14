@@ -11,8 +11,8 @@ var express = require('express')
 
 var app = express();
 
-var server = http.createServer(app);
-var io = require('socket.io').listen(server);
+//var server = http.createServer(app);
+//var io = require('socket.io').listen(server);
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -22,22 +22,18 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(app.router);
-
-app.configure(function(){
-    app.use(function(req, res, next) {
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.header('Access-Control-Allow-Origin', "*");
-      return next();
-    });
-    app.use(express.static(path.join(__dirname, 'public')));
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
+//app.use(app.router);
+app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' === app.get('env')) {
   app.use(express.errorHandler());
 }
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.get('/', routes.index);
 app.get('/cuponera/cuponera', routes.list);
@@ -57,6 +53,11 @@ app.get('/users', user.list);
 
 //io.sockets.on('connection', routes.votar);
 
-server.listen(app.get('port'), function(){
-  console.log('Express server escuchando en el puerto ' + app.get('port'));
+app.listen(app.get('port'), function () {
+    //var host = app.address().address;
+    var port = app.get('port');
+    console.log('Example app listening at localhost:', port);
 });
+//server.listen(app.get('port'), function(){
+//  console.log('Express server escuchando en el puerto ' + app.get('port'));
+//});

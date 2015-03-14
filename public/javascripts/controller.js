@@ -67,7 +67,7 @@ function CuponListController($scope, Cupon){
 	$scope.cupones = Cupon.query();
 }
 
-function CuponImagenController($scope, $http, socket, ImagenCupon){
+function CuponImagenController($scope, $http, ImagenCupon){
     "use strict";
 	$scope.cupones = ImagenCupon.query();
 	$scope.comentario = '';

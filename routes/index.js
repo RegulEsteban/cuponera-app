@@ -282,7 +282,6 @@ exports.addUbicaciones = function(req, res){
 };
 
 exports.imagenesMovil = function(req, res, next) {
-    console.log(req.headers);
     var m_names = new Array("Enero", "Febrero", "Marzo","Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre","Octubre", "Noviembre", "Diciembre");    
     Cupon.find({}).populate({
         path: 'comentarios.id_usuario',
@@ -303,12 +302,7 @@ exports.imagenesMovil = function(req, res, next) {
                             comentarios: result[i].comentarios, 
                             fecha_validez: fecha_d};
             }
-            res.writeHead(200, {
-                'Content-Type': 'application/json; charset=utf-8'
-            });
-            res.end(JSON.stringify(respuesta));
-            //res.json(respuesta);
+            res.json(respuesta);
         }
     });
-    return next();
 };

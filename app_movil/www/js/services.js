@@ -1,4 +1,4 @@
-angular.module('cuponeraApp.services', [])
+angular.module('cuponeraApp.services', ['ngResource'])
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
 
@@ -47,7 +47,7 @@ angular.module('cuponeraApp.services', [])
     }
   };
 })
-.factory('API', function ($rootScope, $http, $ionicLoading, $window) {
+.factory('API', function ($rootScope, $http, $ionicLoading, $window, $resource) {
     var base = "http://localhost:3000";
     $rootScope.show = function (text) {
         $rootScope.loading = $ionicLoading.show({
@@ -84,70 +84,63 @@ angular.module('cuponeraApp.services', [])
         $rootScope.$broadcast('scroll.refreshComplete');
     };
 
-$rootScope.setToken = function (token) {
-    return $window.localStorage.token = token;
-};
+    $rootScope.setToken = function (token) {
+        return $window.localStorage.token = token;
+    };
+    
+    $rootScope.getToken = function () {
+        return $window.localStorage.token;
+    };
+    
+    $rootScope.isSessionActive = function () {
+        return $window.localStorage.token ? true : false;
+    };
 
-$rootScope.getToken = function () {
-    return $window.localStorage.token;
-};
-
-$rootScope.isSessionActive = function () {
-    return $window.localStorage.token ? true : false;
-};
-
-return {
-    signin: function (form) {
-        return $http.post(base+'/api/v1/bucketList/auth/login', form);
-    },
-    signup: function (form) {
-        return $http.post(base+'/api/v1/bucketList/auth/register', form);
-    },
-    getAll: function (email) {
-        return $http.get(base+'/api/v1/bucketList/data/list', {
-            method: 'GET',
-            params: {
-                token: email
-            }
-        });
-    },
-    getOne: function (id, email) {
-        return $http.get(base+'/api/v1/bucketList/data/item/' + id, {
-            method: 'GET',
-            params: {
-                token: email
-            }
-        });
-    },
-    saveItem: function (form, email) {
-        return $http.post(base+'/api/v1/bucketList/data/item', form, {
-            method: 'POST',
-            params: {
-                token: email
-            }
-        });
-    },
-    putItem: function (id, form, email) {
-        return $http.put(base+'/api/v1/bucketList/data/item/' + id, form, {
-            method: 'PUT',
-            params: {
-                token: email
-            }
-        });
-    },
-    deleteItem: function (id, email) {
-        return $http.delete(base+'/api/v1/bucketList/data/item/' + id, {
-            method: 'DELETE',
-            params: {
-                token: email
-            }
-        });
-    },
-    getCupones: function () {
-        return $http.get(base+'/imagenesMovil', {
-            method: 'GET'
-        });
-    }
-};
+    return {
+        signin: function (form) {
+            return $http.post(base+'/api/v1/bucketList/auth/login', form);
+        },
+        signup: function (form) {
+            return $http.post(base+'/api/v1/bucketList/auth/register', form);
+        },
+        getAll: function (email) {
+            return $http.get(base+'/api/v1/bucketList/data/list', {
+                method: 'GET',
+                params: {
+                    token: email
+                }
+            });
+        },
+        getOne: function (id, email) {
+            return $http.get(base+'/api/v1/bucketList/data/item/' + id, {
+                method: 'GET',
+                params: {
+                    token: email
+                }
+            });
+        },
+        saveItem: function (form, email) {
+            return $http.post(base+'/api/v1/bucketList/data/item', form, {
+                method: 'POST',
+                params: {
+                    token: email
+                }
+            });
+        },
+        putItem: function (id, form, email) {
+            return $http.put(base+'/api/v1/bucketList/data/item/' + id, form, {
+                method: 'PUT',
+                params: {
+                    token: email
+                }
+            });
+        },
+        getCupones: function () {
+            return $resource(base+'/imagenesMovil');
+    //        return $http.get(base+'/imagenesMovil', {
+    //            method: 'GET'
+    //        });
+        }
+    };
 })
 ;
