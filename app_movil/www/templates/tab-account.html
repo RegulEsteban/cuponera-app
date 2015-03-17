@@ -1,9 +1,23 @@
 <ion-view view-title="Account">
   <ion-content>
-    <ion-list>
-    <ion-toggle  ng-model="settings.enableFriends">
-        Enable Friends
-    </ion-toggle>
-    </ion-list>
+  <div id="map">
+  	<ui-gmap-google-map 
+		         center="map.center"
+		         zoom="map.zoom"
+		         dragging="map.dragging"
+		         bounds="map.bounds"
+		         events="map.events"
+		         options="map.options"
+		         pan="true"
+		         control="map.control">
+					<ui-gmap-layer type="TrafficLayer" show="map.showTraffic"></ui-gmap-layer>
+					<ui-gmap-layer type="BicyclingLayer" show="map.showBicycling"></ui-gmap-layer>
+					<ui-gmap-drag-zoom keyboardkey="'alt'"></ui-gmap-drag-zoom>
+			        <ui-gmap-markers models="map.clickMarkers" coords="'self'" click="clackMarker" ></ui-gmap-markers>
+			        <ui-gmap-marker ng-repeat="m in map.markers" coords="m" icon="m.icon" click="onMarkerClicked(m)" idKey="m.id" options="m.options"></ui-gmap-marker>				
+			        <ui-gmap-marker coords="map.clickedMarker" idKey="map.clickedMarker.id" options="map.clickedMarker.options"></ui-gmap-marker>        
+				</ui-gmap-google-map>
+  </div>
+  
   </ion-content>
 </ion-view>

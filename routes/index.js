@@ -78,7 +78,7 @@ exports.upload = function(req, res, next){
 	var input = req.body;
 	var user;
 
-	Usuario.findOne({ 'nombre' : 'Esteban' }, function (err, usuario) {
+	Usuario.findOne({ 'nombre' : 'Dulce' }, function (err, usuario) {
 	    if(usuario){
 	        var cupon_get = {nombre: image.name, extension: image.type, imagen_binary: new Buffer(fs.readFileSync(image.path)).toString('base64'), 
 	                imagen: fs.readFileSync(image.path), fecha_validez: input.fecha, id_usuario: usuario._id};
@@ -131,7 +131,11 @@ exports.imagenes = function(req, res) {
 	    path: 'comentarios.id_usuario',
 	    select: 'nombre ap_paterno extension_avatar avatar_binary',
 	    options: { limit: 1 }
-	  }).select('nombre extension imagen_binary fecha_validez comentarios').exec(function(error, result){
+	  }).populate({
+		    path: 'id_usuario',
+		    select: 'empresa extension_avatar avatar_binary',
+		    options: { limit: 1 }
+	  }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario').exec(function(error, result){
 		if(!error){
 			var i = 0, respuesta = new Array(result.length);
             for (i; i < result.length; i=i+1)
@@ -144,7 +148,7 @@ exports.imagenes = function(req, res) {
             	respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+result[i].imagen_binary, 
             	            nombre: result[i].nombre, _id: result[i]._id, 
             	            comentarios: result[i].comentarios, 
-            	            fecha_validez: fecha_d};
+            	            fecha_validez: fecha_d, id_usuario: result[i].id_usuario};
             }
             res.json(respuesta);
 		}
@@ -284,16 +288,16 @@ exports.addUbicaciones = function(req, res){
 exports.imagenesMovil = function(req, res, next) {
     var m_names = new Array("Enero", "Febrero", "Marzo","Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre","Octubre", "Noviembre", "Diciembre");    
     Cupon.find({}).populate({
-        path: 'comentarios.id_usuario',
-        select: 'nombre ap_paterno extension_avatar avatar_binary',
-        options: { limit: 1 }
-      }).populate({
-          path: 'id_usuario',
-          select: 'nombre ap_paterno extension_avatar avatar_binary',
-          options: { limit: 1 }
-      }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario').exec(function(error, result){
-        if(!error){
-            var i = 0, respuesta = new Array(result.length);
+	    path: 'comentarios.id_usuario',
+	    select: 'nombre ap_paterno extension_avatar avatar_binary',
+	    options: { limit: 1 }
+	  }).populate({
+		    path: 'id_usuario',
+		    select: 'empresa extension_avatar avatar_binary',
+		    options: { limit: 1 }
+	  }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario').exec(function(error, result){
+		if(!error){
+			var i = 0, respuesta = new Array(result.length);
             for (i; i < result.length; i=i+1)
             {
                 var d = result[i].fecha_validez;
@@ -301,10 +305,10 @@ exports.imagenesMovil = function(req, res, next) {
                 var curr_month = d.getMonth();
                 var curr_year = d.getFullYear();
                 var fecha_d = curr_date + " - " + m_names[curr_month]+ " - " + curr_year;
-                respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+result[i].imagen_binary, 
-                            nombre: result[i].nombre, _id: result[i]._id, 
-                            comentarios: result[i].comentarios, 
-                            fecha_validez: fecha_d};
+            	respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+result[i].imagen_binary, 
+            	            nombre: result[i].nombre, _id: result[i]._id, 
+            	            comentarios: result[i].comentarios, 
+            	            fecha_validez: fecha_d, id_usuario: result[i].id_usuario};
             }
             res.json(respuesta);
         }

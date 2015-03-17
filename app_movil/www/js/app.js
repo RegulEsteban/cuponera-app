@@ -1,4 +1,4 @@
-angular.module('cuponeraApp', ['ionic', 'cuponeraApp.controllers', 'cuponeraApp.services', 'ngResource'])
+angular.module('cuponeraApp', ['ionic', 'cuponeraApp.controllers', 'cuponeraApp.services', 'ngResource', 'uiGmapgoogle-maps'])
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -51,9 +51,17 @@ angular.module('cuponeraApp', ['ionic', 'cuponeraApp.controllers', 'cuponeraApp.
         views: {
         'tab-account': {
             templateUrl: 'templates/tab-account.html',
-            controller: 'AccountCtrl'
+            controller: 'MapsController'
             }
         }
     });
     $urlRouterProvider.otherwise('/tab/dash');
-});
+})
+.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
+  GoogleMapApi.configure({
+    key: 'AIzaSyDbqmC8F6dWSfD4c3n5zZgbQx7_XB3A6Sg',
+    v: '3.17',
+    libraries: 'weather,geometry,visualization'
+  });
+}])
+;

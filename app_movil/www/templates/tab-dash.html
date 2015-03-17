@@ -14,8 +14,8 @@
 		<div ng-repeat="cupon in cupones">
 			<div class="list card">
 			  <div class="item item-avatar">
-			    <img ng-src="{{chat.face}}"/>
-			    <h2>Marty McFly</h2>
+			    <img ng-src="data:{{cupon.id_usuario.extension_avatar}};base64,{{cupon.id_usuario.avatar_binary}}"/>
+			    <h2>{{cupon.id_usuario.empresa}}</h2>
 			    <p><span><strong>Válido hasta: </strong>{{cupon.fecha_validez}}</span></p>
 			  </div>
 			
