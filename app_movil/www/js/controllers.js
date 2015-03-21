@@ -1,4 +1,4 @@
-angular.module('cuponeraApp.controllers', [])
+angular.module('cuponeraApp.controllers', ['ionic'])
 .controller('CuponesCtrl', function($scope, $timeout, $ionicModal, $http, API) {
     $scope.cupones = API.getCupones().query();
     $scope.doRefresh = function() {
@@ -73,7 +73,6 @@ angular.module('cuponeraApp.controllers', [])
         
         var map = new google.maps.Map(document.getElementById("map"),mapOptions);
 
-        //Marker + infowindow + angularjs compiled ng-click
         var contentString = "<div><a ng-click='clickTest()'>Clicca qui!</a></div>";
         var compiled = $compile(contentString)($scope);
         var infowindow = new google.maps.InfoWindow({
@@ -89,7 +88,7 @@ angular.module('cuponeraApp.controllers', [])
         });
         $scope.map = map;
     };
-    // google.maps.event.addDomListener(window, 'load', initialize);
+
     $scope.centerOnMe = function() {
         if(!$scope.map) {return;}
 

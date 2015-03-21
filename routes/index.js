@@ -341,3 +341,22 @@ exports.getCuponById = function(req, res, next) {
         }
     });
 };
+
+exports.getAllUbicaciones = function(req, res, next) {    
+    Cupon.find({}).populate({
+            path: 'id_usuario',
+            select: 'empresa extension_avatar avatar_binary',
+            options: { limit: 1 }
+      }).select('nombre extension imagen_binary comentarios id_usuario').exec(function(error, result){
+        if(!error){
+            var i = 0, respuesta = new Array(result.length);
+            for (i; i < result.length; i=i+1)
+            {
+                respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+result[i].imagen_binary, 
+                            nombre: result[i].nombre, _id: result[i]._id,
+                            id_usuario: result[i].id_usuario};
+            }
+            res.json(respuesta);
+        }
+    });
+};
