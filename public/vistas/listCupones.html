@@ -23,12 +23,11 @@
                     </ul>
                 </div>
                 <div class="panel-heading">
-                    <img class="[ img-circle pull-left ]" style="width:60px" bn-lazy-src="data:{{cupon.id_usuario.extension_avatar}};base64,{{cupon.id_usuario.avatar_binary}}"/>
+                    <img class="[ img-circle pull-left ]" style="width:50px; height: 50px" bn-lazy-src="data:{{cupon.id_usuario.extension_avatar}};base64,{{cupon.id_usuario.avatar_binary}}"/>
                     <h3>{{cupon.id_usuario.empresa}}</h3>
                     <h5><span><strong>Válido hasta: </strong>{{cupon.fecha_validez}}</span></h5>
                 </div>
                 <div class="panel-body">
-<!--                     <p>Just created a new snippet inspired by the Svbtle Menu. Find it here: <a href="http://bootsnipp.com/snippets/MaWrA">http://bootsnipp.com/snippets/MaWrA</a></p> -->
                     <a class="panel-google-plus-image" href="#">
                         <img bn-lazy-src="{{cupon.binaryImage}}" class="thumbnail" alt="{{cupon.nombre}}"/>
                     </a>
@@ -55,22 +54,17 @@
 			        </div>
                 </div>
                 <div class="panel-footer">
-                				        	<div style="cursor: pointer;" ng-show="cupon.comentarios.length > end" ng-click="vieMoreComents()">
-							<h5 class="text-center"><span class="glyphicon glyphicon-plus-sign"></span> Ver más comentarios</h5>
-						</div>
-				  		<div class="input-group">
-			      			<input type="text" name="comentario" ng-model="comentario" class="form-control" id="comentario" placeholder="Comentar">
-			   				<span class="input-group-btn">
-			     				<button type="button" class="btn btn-primary" ng-click="doComment(cupon._id, comentario, cupon.comentarios)">
-			     					<span class="glyphicon glyphicon-comment"></span> Comentar
-			     				</button>
-			   				</span>
-			   			</div>
-<!--                     <button type="button" class="[ btn btn-default ]">+1</button> -->
-<!--                     <button type="button" class="[ btn btn-default ]"> -->
-<!--                         <span class="[ glyphicon glyphicon-share-alt ]"></span> -->
-<!--                     </button> -->
-<!--                     <div class="input-placeholder">Add a comment...</div> -->
+					<div style="cursor: pointer;" ng-show="cupon.comentarios.length > end" ng-click="vieMoreComents()">
+						<h5 class="text-center"><span class="glyphicon glyphicon-plus-sign"></span> Ver más comentarios</h5>
+					</div>
+			  		<div class="input-group">
+		      			<input type="text" name="comentario" ng-model="comentario" class="form-control" id="comentario" placeholder="Comentar">
+		   				<span class="input-group-btn">
+		     				<button type="button" class="btn btn-primary" ng-click="doComment(cupon._id, comentario, cupon.comentarios)">
+		     					<span class="glyphicon glyphicon-comment"></span> Comentar
+		     				</button>
+		   				</span>
+		   			</div>
                 </div>
                 <div class="panel-google-plus-comment">
                     <img class="img-circle" src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46" alt="User Image" />
@@ -86,7 +80,7 @@
     </div>
 </div>
 
-<div class="container" style="margin-top: 20px; margin-bottom: 20px;" ng-switch on="cupones.length">
+<!-- <div class="container" style="margin-top: 20px; margin-bottom: 20px;" ng-switch on="cupones.length">
 	<ul ng-switch-when="0">
 		<li><em>No hay cupones guardados. ¿Quieres <a href="#/new">registrar un cupón</a>?</li>
 	</ul>
@@ -129,4 +123,4 @@
    			<br/>
         </div>
     </div>
-</div>
+</div> -->

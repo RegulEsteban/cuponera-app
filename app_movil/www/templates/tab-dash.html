@@ -1,5 +1,7 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="Cupones">
   <ion-content class="padding">
+  	<ion-refresher on-refresh="doRefresh()">
+	</ion-refresher>
   	<div ng-switch on="cupones.length">
 		<div ng-switch-when="0">
 			<div class="list card">
@@ -21,25 +23,21 @@
 			
 			  <div class="item item-body">
 			    <img class="full-image" ng-src="{{cupon.binaryImage}}"  alt="{{cupon.nombre}}"/>
-			    <p>Califica: <rating class="color-star" style="font-size: 1.5em" ng-model="rate" max="5" readonly="false" on-hover="hoveringOver(value)"></rating></p>
 			    <p>
 			      <a href="#" class="subdued">1 Like</a>
-			      <a href="#" class="subdued">5 Comments</a>
+			      <a href="#" class="subdued" ng-show="cupon.comentarios.length > 0">{{cupon.comentarios.length}} Comments</a>
 			    </p>
 			  </div>
-			
+
 			  <div class="item tabs tabs-secondary tabs-icon-left">
 			    <a class="tab-item" href="#">
-			      <i class="icon ion-thumbsup"></i>
-			      Like
+			      <i class="icon ion-star"></i> Favorito
+			    </a>
+			    <a class="tab-item" href="#" ng-click="actionComent(cupon)">
+			      <i class="icon ion-chatbox"></i> Comentar
 			    </a>
 			    <a class="tab-item" href="#">
-			      <i class="icon ion-chatbox"></i>
-			      Comment
-			    </a>
-			    <a class="tab-item" href="#">
-			      <i class="icon ion-share"></i>
-			      Share
+			      <i class="icon ion-share"></i> Compartir
 			    </a>
 			  </div>
 			</div>

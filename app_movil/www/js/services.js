@@ -137,6 +137,9 @@ angular.module('cuponeraApp.services', ['ngResource'])
         },
         getCupones: function () {
             return $resource(base+'/imagenesMovil');
+        },
+        getCuponById: function (id) {
+            return $resource(base+'/getCuponById/'+id);
         }
     };
 })

@@ -314,3 +314,30 @@ exports.imagenesMovil = function(req, res, next) {
         }
     });
 };
+
+exports.getCuponById = function(req, res, next) {
+    var m_names = new Array("Enero", "Febrero", "Marzo","Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre","Octubre", "Noviembre", "Diciembre");    
+    Cupon.findById(req.params.id).populate({
+        path: 'comentarios.id_usuario',
+        select: 'nombre ap_paterno extension_avatar avatar_binary',
+        options: { limit: 1 }
+      }).populate({
+            path: 'id_usuario',
+            select: 'empresa extension_avatar avatar_binary',
+            options: { limit: 1 }
+      }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario').exec(function(error, result){
+        if(result){
+            var respuesta = {};
+            var d = result.fecha_validez;
+            var curr_date = d.getDate();
+            var curr_month = d.getMonth();
+            var curr_year = d.getFullYear();
+            var fecha_d = curr_date + " - " + m_names[curr_month]+ " - " + curr_year;
+            respuesta={binaryImage: "data:"+result.extension+";base64,"+result.imagen_binary, 
+                        nombre: result.nombre, _id: result._id, 
+                        comentarios: result.comentarios, 
+                        fecha_validez: fecha_d, id_usuario: result.id_usuario};
+            res.json(respuesta);
+        }
+    });
+};

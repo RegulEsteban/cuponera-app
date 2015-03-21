@@ -1,4 +1,4 @@
-angular.module('cuponeraApp', ['ionic', 'cuponeraApp.controllers', 'cuponeraApp.services', 'ngResource', 'uiGmapgoogle-maps'])
+angular.module('cuponeraApp', ['ionic', 'cuponeraApp.controllers', 'cuponeraApp.services', 'ngResource', 'ui.bootstrap'])
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -13,55 +13,71 @@ angular.module('cuponeraApp', ['ionic', 'cuponeraApp.controllers', 'cuponeraApp.
     });
 })
 .config(function($stateProvider, $urlRouterProvider) {
-    $stateProvider
-    .state('tab', {
-        url: "/tab",
-        abstract: true,
-        templateUrl: "templates/tabs.html"
+  $stateProvider
+    .state('signin', {
+      url: '/sign-in',
+      templateUrl: 'templates/sign-in.html',
+      controller: 'SignInCtrl'
     })
-    .state('tab.dash', {
-        url: '/dash',
-        views: {
-            'tab-dash': {
-            templateUrl: 'templates/tab-dash.html',
-            controller: 'DashCtrl'
-            }
-        }
+    .state('forgotpassword', {
+      url: '/forgot-password',
+      templateUrl: 'templates/forgot-password.html'
     })
-    .state('tab.chats', {
-        url: '/chats',
-        views: {
-            'tab-chats': {
-            templateUrl: 'templates/tab-chats.html',
-            controller: 'ChatsCtrl'
-            }
-        }
+    .state('tabs', {
+      url: '/tab',
+      abstract: true,
+      templateUrl: 'templates/tabs.html',
+      controller: 'MapCtrl'
     })
-    .state('tab.chat-detail', {
-        url: '/chats/:chatId',
-        views: {
-            'tab-chats': {
-            templateUrl: 'templates/chat-detail.html',
-            controller: 'ChatDetailCtrl'
-            }
+    .state('tabs.home', {
+      url: '/home',
+      views: {
+        'home-tab': {
+          templateUrl: 'templates/tab-dash.html',
+          controller: 'CuponesCtrl'
         }
+      }
     })
-    .state('tab.account', {
-        url: '/account',
-        views: {
-        'tab-account': {
-            templateUrl: 'templates/tab-account.html',
-            controller: 'MapsController'
-            }
+    .state('tabs.maps', {
+      url: '/maps',
+      views: {
+        'maps-tab': {
+          templateUrl: 'templates/tab-map.html'
         }
+      }
+    })
+    .state('tabs.facts', {
+      url: '/facts',
+      views: {
+        'home-tab': {
+          templateUrl: 'templates/facts.html'
+        }
+      }
+    })
+    .state('tabs.facts2', {
+      url: '/facts2',
+      views: {
+        'home-tab': {
+          templateUrl: 'templates/facts2.html'
+        }
+      }
+    })
+    .state('tabs.about', {
+      url: '/about',
+      views: {
+        'about-tab': {
+          templateUrl: 'templates/about.html'
+        }
+      }
+    })
+    .state('tabs.navstack', {
+      url: '/navstack',
+      views: {
+        'about-tab': {
+          templateUrl: 'templates/nav-stack.html'
+        }
+      }
     });
-    $urlRouterProvider.otherwise('/tab/dash');
+   $urlRouterProvider.otherwise('/sign-in');
 })
-.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
-  GoogleMapApi.configure({
-    key: 'AIzaSyDbqmC8F6dWSfD4c3n5zZgbQx7_XB3A6Sg',
-    v: '3.17',
-    libraries: 'weather,geometry,visualization'
-  });
-}])
 ;

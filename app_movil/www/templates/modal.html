@@ -1,0 +1,37 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-positive">
+    <h1 class="title">Comentar</h1>
+    <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+  </ion-header-bar>
+  <ion-content class="padding">
+	 <div class="list card">
+	  	<div class="item item-avatar">
+	    	<img ng-src="data:{{modal.cupon.id_usuario.extension_avatar}};base64,{{modal.cupon.id_usuario.avatar_binary}}"/>
+	    	<h2>{{modal.cupon.id_usuario.empresa}}</h2>
+	    	<p><span><strong>Válido hasta: </strong>{{modal.cupon.fecha_validez}}</span></p>
+	  	</div>
+	
+		<div class="item item-image">
+			<img ng-src="{{modal.cupon.binaryImage}}"  alt="{{modal.cupon.nombre}}"/>
+		</div>
+		
+	  	<div ng-switch on="modal.cupon.comentarios.length">
+			<a class="item item-icon-left assertive" href="#" ng-switch-when="0">
+		    	<i class="icon ion-music-note"></i>Sin comentarios
+		  	</a>
+		  	<a class="item item-avatar" href="#" ng-repeat="comment in modal.cupon.comentarios | limitTo: modal.end">
+	      		<img ng-src="data:{{comment.id_usuario.extension_avatar}};base64,{{comment.id_usuario.avatar_binary}}"/>
+	      		<h2>{{comment.id_usuario.nombre}} {{comment.id_usuario.ap_paterno}}</h2>
+	      		<p>{{comment.descripcion}}</p>
+    		</a>
+		</div>
+	</div>
+    
+    <div class="list">
+	  <label class="item item-input">
+	    <textarea ng-model="comentario" placeholder="Comentar"></textarea>
+	  </label>
+	  <button class="button button-full button-positive" ng-click="doComment(modal.cupon._id, comentario, modal.cupon.comentarios)">Comentar</button>
+	</div>
+  </ion-content>
+</ion-modal-view>

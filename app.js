@@ -48,6 +48,7 @@ app.post('/usuarios', routes.creaUsuarios);
 app.post('/comentar', routes.doComentoByCupon);
 app.post('/nuevoProveedor', routes.createCuponero);
 app.post('/addUbicaciones', routes.addUbicaciones);
+app.get('/getCuponById/:id', routes.getCuponById);
 
 app.get('/users', user.list);
 
