@@ -40,6 +40,10 @@ var comentario_cupon_usuario = new mongoose.Schema({
 });
 
 var favorito_cupon_usuario = new mongoose.Schema({
+    id_usuario: { type : mongoose.Schema.Types.ObjectId, ref : 'usuario' }
+});
+
+var puntuacion_cupon_usuario = new mongoose.Schema({
     puntuacion: Number,
     id_usuario: { type : mongoose.Schema.Types.ObjectId, ref : 'usuario' }
 });
@@ -70,5 +74,6 @@ exports.CuponSchema = new mongoose.Schema({
     fecha_validez: Date,
     id_usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'usuario' },
     comentarios: [comentario_cupon_usuario],
-    favoritos: [favorito_cupon_usuario]
+    favoritos: [favorito_cupon_usuario],
+    puntuacion: [puntuacion_cupon_usuario]
 });

@@ -1,7 +1,7 @@
 <ion-modal-view>
-  <ion-header-bar class="bar bar-header bar-positive">
+  <ion-header-bar class="bar bar-header bar-assertive">
     <h1 class="title">Comentar</h1>
-    <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+    <button class="button button-clear button-primary" ng-click="closeModal()">Cancel</button>
   </ion-header-bar>
   <ion-content class="padding">
 	 <div class="list card">
@@ -14,7 +14,21 @@
 		<div class="item item-image">
 			<img ng-src="{{modal.cupon.binaryImage}}"  alt="{{modal.cupon.nombre}}"/>
 		</div>
-		
+		<div class="item tabs tabs-secondary tabs-icon-left">
+		    <a class="tab-item" href="#" >
+		    	<div ng-switch on="modal.isFav">
+				    <div ng-switch-when="1">
+				        <i class="icon ion-checkmark-circled"></i>
+				    </div>
+				    <div ng-switch-default ng-click="addToFav(modal.cupon)">
+				        <i class="icon ion-star"></i> Favorito
+				    </div>
+				</div>
+		    </a>
+		    <a class="tab-item" href="#" ng-click="addToFav(cupon)">
+		      <i class="icon ion-star"></i> Califica
+		    </a>
+		</div>
 	  	<div ng-switch on="modal.cupon.comentarios.length">
 			<a class="item item-icon-left assertive" href="#" ng-switch-when="0">
 		    	<i class="icon ion-music-note"></i>Sin comentarios

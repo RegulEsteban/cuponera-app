@@ -78,7 +78,7 @@ exports.upload = function(req, res, next){
 	var input = req.body;
 	var user;
 
-	Usuario.findOne({ 'nombre' : 'Dulce' }, function (err, usuario) {
+	Usuario.findOne({ 'nombre' : 'Pablo' }, function (err, usuario) {
 	    if(usuario){
 	        var cupon_get = {nombre: image.name, extension: image.type, imagen_binary: new Buffer(fs.readFileSync(image.path)).toString('base64'), 
 	                imagen: fs.readFileSync(image.path), fecha_validez: input.fecha, id_usuario: usuario._id};
@@ -270,7 +270,7 @@ exports.createCuponero = function(req, res){
 
 exports.addUbicaciones = function(req, res){
     var bodyUbicaciones = req.body;
-    Usuario.findOne({ 'nombre' : 'Dulce' }).exec(function (err, usuario) {
+    Usuario.findOne({ 'nombre' : 'Pablo' }).exec(function (err, usuario) {
         if(usuario){
             bodyUbicaciones=JSON.parse(bodyUbicaciones.ubicaciones);
             for(var i=0;i<bodyUbicaciones.ubicaciones.length;i=i+1){
@@ -295,7 +295,7 @@ exports.imagenesMovil = function(req, res, next) {
 		    path: 'id_usuario',
 		    select: 'empresa extension_avatar avatar_binary',
 		    options: { limit: 1 }
-	  }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario').exec(function(error, result){
+	  }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario favoritos').exec(function(error, result){
 		if(!error){
 			var i = 0, respuesta = new Array(result.length);
             for (i; i < result.length; i=i+1)
@@ -308,7 +308,7 @@ exports.imagenesMovil = function(req, res, next) {
             	respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+result[i].imagen_binary, 
             	            nombre: result[i].nombre, _id: result[i]._id, 
             	            comentarios: result[i].comentarios, 
-            	            fecha_validez: fecha_d, id_usuario: result[i].id_usuario};
+            	            fecha_validez: fecha_d, id_usuario: result[i].id_usuario, favoritos: result[i].favoritos};
             }
             res.json(respuesta);
         }
@@ -325,7 +325,7 @@ exports.getCuponById = function(req, res, next) {
             path: 'id_usuario',
             select: 'empresa extension_avatar avatar_binary',
             options: { limit: 1 }
-      }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario').exec(function(error, result){
+      }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario favoritos').exec(function(error, result){
         if(result){
             var respuesta = {};
             var d = result.fecha_validez;
@@ -336,7 +336,7 @@ exports.getCuponById = function(req, res, next) {
             respuesta={binaryImage: "data:"+result.extension+";base64,"+result.imagen_binary, 
                         nombre: result.nombre, _id: result._id, 
                         comentarios: result.comentarios, 
-                        fecha_validez: fecha_d, id_usuario: result.id_usuario};
+                        fecha_validez: fecha_d, id_usuario: result.id_usuario, favoritos: result.favoritos};
             res.json(respuesta);
         }
     });
@@ -345,9 +345,9 @@ exports.getCuponById = function(req, res, next) {
 exports.getAllUbicaciones = function(req, res, next) {    
     Cupon.find({}).populate({
             path: 'id_usuario',
-            select: 'empresa extension_avatar avatar_binary',
+            select: 'empresa extension_avatar avatar_binary ubicaciones',
             options: { limit: 1 }
-      }).select('nombre extension imagen_binary comentarios id_usuario').exec(function(error, result){
+      }).select('_id nombre extension imagen_binary comentarios id_usuario').exec(function(error, result){
         if(!error){
             var i = 0, respuesta = new Array(result.length);
             for (i; i < result.length; i=i+1)
@@ -355,6 +355,53 @@ exports.getAllUbicaciones = function(req, res, next) {
                 respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+result[i].imagen_binary, 
                             nombre: result[i].nombre, _id: result[i]._id,
                             id_usuario: result[i].id_usuario};
+            }
+            res.json(respuesta);
+        }
+    });
+};
+
+exports.doFavorito = function(req, res){
+    var input = req.body;
+    console.log(input);
+    Cupon.findById(input.id_cupon).exec(function(err, cupon){
+        Usuario.findOne({ 'nombre' : input.usuario }).exec(function (err, usuario) {
+            if(usuario){
+                var respuesta = {id_usuario: usuario._id};
+                cupon.favoritos.push(respuesta);
+                cupon.save(function(err, doc){
+                    res.json(cupon);
+                });
+            }else{
+                throw err;
+            }
+        });
+    });
+};
+
+exports.getFavoritos = function(req, res, next){
+    var m_names = new Array("Enero", "Febrero", "Marzo","Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre","Octubre", "Noviembre", "Diciembre");
+    Cupon.find({}).populate({
+        path: 'favoritos',
+        select: 'id_usuario'
+    }).populate({
+            path: 'id_usuario',
+            select: 'empresa extension_avatar avatar_binary',
+            options: { limit: 1 }
+      }).select('nombre extension imagen_binary fecha_validez id_usuario favoritos').exec(function(error, result){
+        if(!error){
+            var i = 0, respuesta = new Array(result.length);
+            for (i; i < result.length; i=i+1)
+            {
+                var d = result[i].fecha_validez;
+                var curr_date = d.getDate();
+                var curr_month = d.getMonth();
+                var curr_year = d.getFullYear();
+                var fecha_d = curr_date + " - " + m_names[curr_month]+ " - " + curr_year;
+                respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+result[i].imagen_binary, 
+                            nombre: result[i].nombre, _id: result[i]._id, 
+                            fecha_validez: fecha_d, id_usuario: result[i].id_usuario, 
+                            favoritos: result[i].favoritos};
             }
             res.json(respuesta);
         }

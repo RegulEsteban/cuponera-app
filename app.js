@@ -49,6 +49,9 @@ app.post('/comentar', routes.doComentoByCupon);
 app.post('/nuevoProveedor', routes.createCuponero);
 app.post('/addUbicaciones', routes.addUbicaciones);
 app.get('/getCuponById/:id', routes.getCuponById);
+app.get('/getAllUbicaciones', routes.getAllUbicaciones);
+app.post('/doFavorito', routes.doFavorito);
+app.get('/getFavoritos', routes.getFavoritos);
 
 app.get('/users', user.list);
 

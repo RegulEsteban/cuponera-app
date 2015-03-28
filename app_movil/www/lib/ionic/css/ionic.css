@@ -3100,7 +3100,9 @@ a.subdued {
       background-image: linear-gradient(180deg, #0a9ec7, #0a9ec7 50%, transparent 50%); }
   .bar.bar-assertive {
     border-color: #e42012;
-    background-color: #ef473a;
+    /********************************* cambio de color **************************/
+    background-color: #2C3E50;
+    /********************************* background-color: #ef473a; **************************/
     background-image: linear-gradient(0deg, #e42012, #e42012 50%, transparent 50%);
     color: #fff; }
     .bar.bar-assertive .title {

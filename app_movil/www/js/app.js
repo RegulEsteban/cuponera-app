@@ -66,7 +66,8 @@ angular.module('cuponeraApp', ['ionic', 'cuponeraApp.controllers', 'cuponeraApp.
       url: '/about',
       views: {
         'about-tab': {
-          templateUrl: 'templates/about.html'
+          templateUrl: 'templates/about.html',
+          controller: 'FavoritosCtrl'
         }
       }
     })

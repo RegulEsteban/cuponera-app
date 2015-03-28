@@ -22,20 +22,20 @@
 			  </div>
 			
 			  <div class="item item-body">
-			    <img class="full-image" ng-src="{{cupon.binaryImage}}"  alt="{{cupon.nombre}}"/>
+			    <img class="full-image" ng-src="{{cupon.binaryImage}}"  alt="{{cupon.nombre}}" ng-click="actionComent(cupon)" />
 			    <p>
-			      <a href="#" class="subdued">1 Like</a>
-			      <a href="#" class="subdued" ng-show="cupon.comentarios.length > 0">{{cupon.comentarios.length}} Comments</a>
+			      <a href="#" class="subdued" ng-click="actionComent(cupon)" ng-show="cupon.favoritos.length > 0">{{cupon.favoritos.length}} Favoritos</a>
+			      <a href="#" class="subdued" ng-click="actionComent(cupon)" ng-show="cupon.comentarios.length > 0">{{cupon.comentarios.length}} Comentarios</a>
 			    </p>
 			  </div>
 
 			  <div class="item tabs tabs-secondary tabs-icon-left">
-			    <a class="tab-item" href="#">
-			      <i class="icon ion-star"></i> Favorito
-			    </a>
-			    <a class="tab-item" href="#" ng-click="actionComent(cupon)">
-			      <i class="icon ion-chatbox"></i> Comentar
-			    </a>
+<!-- 			    <a class="tab-item" href="#" ng-click="addToFav(cupon)"> -->
+<!-- 			      <i class="icon ion-star"></i> Favorito -->
+<!-- 			    </a> -->
+<!-- 			    <a class="tab-item" href="#" ng-click="actionComent(cupon)"> -->
+<!-- 			      <i class="icon ion-chatbox"></i> Comentar -->
+<!-- 			    </a> -->
 			    <a class="tab-item" href="#">
 			      <i class="icon ion-share"></i> Compartir
 			    </a>

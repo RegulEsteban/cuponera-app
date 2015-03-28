@@ -1,7 +1,15 @@
 <ion-view title="Explorar" ng-init="init()">
+
   <ion-content>
+	<div ng-repeat="ubicacion in ubicaciones">
+		<div ng-repeat="ubicacion_usuario in ubicacion.id_usuario.ubicaciones">
+			<marker position="{{ubicacion_usuario.lat}},{{ubicacion_usuario.lon}}"></marker>
+		</div>
+    </div>  	
     <div id="map" data-tap-disabled="true" class="map"></div>
+    
   </ion-content>
+  
   <ion-footer-bar class="bar-dark">
   	<a ng-click="centerOnMe()" class="button button-icon ion-pinpoint"> Encontrarme</a>
   </ion-footer-bar>

@@ -5,10 +5,16 @@ angular.module('cuponeraApp.controllers', ['ionic'])
         $timeout( function() {
           $scope.cupones = API.getCupones().query();
           $scope.$broadcast('scroll.refreshComplete');
-        }, 1000);
+        }, 800);
     };
     $scope.actionComent = function(cupon){        
         $ionicModal.fromTemplateUrl('templates/modal.html', function(modal) {
+            for(var i=0; i<cupon.favoritos.length;i++){
+                if(cupon.favoritos[i].id_usuario==='54f79f5937c51574172dd08d'){
+                    modal.isFav = 1;
+                    break;
+                }
+            }
             modal.start = 0;
             modal.end = 5;
             modal.cupon = cupon;
@@ -20,12 +26,16 @@ angular.module('cuponeraApp.controllers', ['ionic'])
           });
     };
     
+    $scope.closeModal = function(){
+        $scope.modal.remove();
+    };
+    
     $scope.doComment = function(id, coment, list){
         var fd = new FormData();
         fd.append('id_cupon', id);
         fd.append('comentario', coment);
         fd.append('fecha', new Date());
-        $http.post('http://localhost:3000/comentar', fd, {
+        $http.post(API.getBase()+'/comentar', fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
         })
@@ -33,6 +43,22 @@ angular.module('cuponeraApp.controllers', ['ionic'])
             $scope.comentario = '';
             list.push(data);
             $scope.modal.end = $scope.modal.end + 1;
+        })
+        .error(function(data) {
+            console.log('Error: '+data);
+        });
+    };
+    
+    $scope.addToFav = function(cupon){
+        var fd = new FormData();
+        fd.append('id_cupon', cupon._id);
+        fd.append('usuario', 'Esteban');
+        $http.post(API.getBase()+'/doFavorito', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(data) {
+           $scope.modal.isFav = 1;
         })
         .error(function(data) {
             console.log('Error: '+data);
@@ -59,11 +85,28 @@ angular.module('cuponeraApp.controllers', ['ionic'])
     $state.go('tabs.home');
   };
 })
-.controller('HomeTabCtrl', function($scope) {
-  console.log('HomeTabCtrl');
+.controller('FavoritosCtrl', function($scope, $window, API) {
+    var m_names = new Array("Enero", "Febrero", "Marzo","Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre","Octubre", "Noviembre", "Diciembre");
+    var cupones = {};
+    $scope.favoritos = API.getFavoritos().query();
+    $scope.favoritos.$promise.then(function(data) {
+        for (var i=0; i < data.length; i=i+1){
+            for(var j=0;j<data[i].favoritos.length;j++){
+                if(data[i].favoritos[j].id_usuario==='54f79f5937c51574172dd08d'){
+                    cupones.push(data[i]);
+                }
+            }
+        }
+    });
 })
-.controller('MapCtrl', function($scope, $ionicLoading, $compile, $window) { 
-      $scope.init = function() {
+.controller('MapCtrl', function($scope, $http, $ionicLoading, $ionicModal, $compile, $window, API) {
+    $scope.$on('$ionicView.afterEnter', function(){
+       if ( angular.isDefined( $scope.map ) ) {
+          google.maps.event.trigger($scope.map, 'resize');
+       }
+    });
+        
+    $scope.init = function() {
         var myLatlng = new google.maps.LatLng(43.07493,-89.381388);
         var mapOptions = {
           center: myLatlng,
@@ -73,19 +116,42 @@ angular.module('cuponeraApp.controllers', ['ionic'])
         
         var map = new google.maps.Map(document.getElementById("map"),mapOptions);
 
-        var contentString = "<div><a ng-click='clickTest()'>Clicca qui!</a></div>";
-        var compiled = $compile(contentString)($scope);
+        var infowindow = {};        
+        var marker = {};
+        
+//        google.maps.event.addListener(marker, 'click', function() {
+//          infowindow.open(map,this);
+//        });
         var infowindow = new google.maps.InfoWindow({
-          content: compiled[0]
+            content: ''
         });
-        var marker = new google.maps.Marker({
-          position: myLatlng,
-          map: map,
-          title: 'Uluru (Ayers Rock)'
+        
+        $scope.ubicaciones = API.getUbicaciones().query();
+        $scope.ubicaciones.$promise.then(function(data) {
+            for(var cupon in data){
+                if(data[cupon].id_usuario){
+                    for(var j=0;j<data[cupon].id_usuario.ubicaciones.length;j++){
+                        var c = data[cupon]._id;
+                        var contentString = '<div class="infobox"><a ng-click="clickTest(\'' + c + '\')" >'+"<img ng-src='"+data[cupon].binaryImage+"' class='thumbnail' /></a></div>";
+                        var compiled = $compile(contentString)($scope);
+                        marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(data[cupon].id_usuario.ubicaciones[j].lat,data[cupon].id_usuario.ubicaciones[j].lon),
+                            map: map,
+                            icon: 'img/departmentstore.png',
+                            title: data[cupon].id_usuario.empresa,
+                            animation: 2,
+                            info: compiled[0]
+                        });
+                        
+                        google.maps.event.addListener(marker, 'click', function() {
+                            infowindow.setContent(this.info);
+                            infowindow.open(map,this);
+                        });
+                    }
+                }
+            }
         });
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.open(map,marker);
-        });
+        
         $scope.map = map;
     };
 
@@ -94,7 +160,7 @@ angular.module('cuponeraApp.controllers', ['ionic'])
 
         $scope.loading = $ionicLoading.show({
           content: 'Getting current location...',
-          showBackdrop: false
+          showBackdrop: true
         });
 
         navigator.geolocation.getCurrentPosition(function(pos) {
@@ -104,8 +170,65 @@ angular.module('cuponeraApp.controllers', ['ionic'])
           alert('Unable to get location: ' + error.message);
         });
     };
-    $scope.clickTest = function() {
-        alert('Example of infowindow with ng-click');
+    $scope.clickTest = function(cupon) {
+        $scope.cupon = API.getCuponById().get({id: cupon});
+        $scope.cupon.$promise.then(function(data) {
+            $ionicModal.fromTemplateUrl('templates/modal.html', function(modal) {
+              for(var i=0; i<data.favoritos.length;i++){
+                  if(data.favoritos[i].id_usuario==='54f79f5937c51574172dd08d'){
+                      modal.isFav = 1;
+                      break;
+                  }
+              }
+              modal.start = 0;
+              modal.end = 5;
+              modal.cupon = data;
+              $scope.modal = modal;
+              $scope.modal.show();
+            }, {
+              scope: $scope,
+              animation: 'slide-in-up'
+            });
+        });
+    };
+    
+    $scope.closeModal = function(){
+        $scope.modal.remove();
+    };
+    
+    $scope.doComment = function(id, coment, list){
+        var fd = new FormData();
+        fd.append('id_cupon', id);
+        fd.append('comentario', coment);
+        fd.append('fecha', new Date());
+        $http.post(API.getBase()+'/comentar', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(data) {
+            $scope.comentario = '';
+            list.push(data);
+            $scope.modal.end = $scope.modal.end + 1;
+        })
+        .error(function(data) {
+            console.log('Error: '+data);
+        });
+    };
+    
+    $scope.addToFav = function(cupon){
+        var fd = new FormData();
+        fd.append('id_cupon', cupon._id);
+        fd.append('usuario', 'Esteban');
+        $http.post(API.getBase()+'/doFavorito', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(data) {
+           $scope.modal.isFav = 1;
+        })
+        .error(function(data) {
+            console.log('Error: '+data);
+        });
     };
 })
 ;

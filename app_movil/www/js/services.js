@@ -97,6 +97,9 @@ angular.module('cuponeraApp.services', ['ngResource'])
     };
 
     return {
+        getBase: function () {
+            return base;
+        },
         signin: function (form) {
             return $http.post(base+'/api/v1/bucketList/auth/login', form);
         },
@@ -138,8 +141,14 @@ angular.module('cuponeraApp.services', ['ngResource'])
         getCupones: function () {
             return $resource(base+'/imagenesMovil');
         },
-        getCuponById: function (id) {
-            return $resource(base+'/getCuponById/'+id);
+        getUbicaciones: function () {
+            return $resource(base+'/getAllUbicaciones');
+        },
+        getCuponById: function () {
+            return $resource(base+'/getCuponById/:id', {id:'@id'});
+        },
+        getFavoritos: function () {
+            return $resource(base+'/getFavoritos');
         }
     };
 })
