@@ -47,8 +47,8 @@
         <ion-content>
           <div class="list">
             <label class="item item-input">
-              <span class="input-label">Usuario</span>
-              <input type="text" ng-model="user.username">
+              <span class="input-label">Email</span>
+              <input type="email" ng-model="user.email">
             </label>
             <label class="item item-input">
               <span class="input-label">Password</span>
@@ -56,7 +56,7 @@
             </label>
           </div>
           <div class="padding">
-            <button class="button button-block button-positive" ng-click="signIn(user)">
+            <button class="button button-block button-positive" ng-click="validateUser()">
               Iniciar Sesión
             </button>
             <p class="text-center">

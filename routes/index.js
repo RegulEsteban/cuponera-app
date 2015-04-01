@@ -12,6 +12,8 @@ var fs = require("fs");
 var ObjectID = mongoose.mongo.BSONPure.ObjectID;
 var Binary = mongoose.mongo.Binary;
 
+var pwdMgr = require('../public/javascripts/auth/managePasswords.js');
+
 exports.index = function(req, res){
   res.render('index', { title: 'Cupones de Descuento' });
 };
@@ -363,7 +365,6 @@ exports.getAllUbicaciones = function(req, res, next) {
 
 exports.doFavorito = function(req, res){
     var input = req.body;
-    console.log(input);
     Cupon.findById(input.id_cupon).exec(function(err, cupon){
         Usuario.findOne({ 'nombre' : input.usuario }).exec(function (err, usuario) {
             if(usuario){
@@ -406,4 +407,41 @@ exports.getFavoritos = function(req, res, next){
             res.json(respuesta);
         }
     });
+};
+
+exports.login = function(req, res, next){
+    var user = req.body;
+    if (user.email.trim().length == 0 || user.password.trim().length == 0) {
+        res.writeHead(403, {
+            'Content-Type': 'application/json; charset=utf-8'
+        });
+        res.end(JSON.stringify({
+            error: "Invalid Credentials"
+        }));
+    }
+    Usuario.findOne({
+        email: req.body.email
+    }, function (err, dbUser) {
+
+        pwdMgr.comparePassword(user.password, dbUser.password, function (err, isPasswordMatch) {
+
+            if (isPasswordMatch) {
+                res.writeHead(200, {
+                    'Content-Type': 'application/json; charset=utf-8'
+                });
+                // remove password hash before sending to the client
+                dbUser.password = "";
+                res.end(JSON.stringify(dbUser));
+            } else {
+                res.writeHead(403, {
+                    'Content-Type': 'application/json; charset=utf-8'
+                });
+                res.end(JSON.stringify({
+                    error: "Invalid User"
+                }));
+            }
+
+        });
+    });
+    return next();
 };

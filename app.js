@@ -31,6 +31,7 @@ if ('development' === app.get('env')) {
 }
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
+  //res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
@@ -52,6 +53,7 @@ app.get('/getCuponById/:id', routes.getCuponById);
 app.get('/getAllUbicaciones', routes.getAllUbicaciones);
 app.post('/doFavorito', routes.doFavorito);
 app.get('/getFavoritos', routes.getFavoritos);
+app.post('/auth/login', routes.login);
 
 app.get('/users', user.list);
 

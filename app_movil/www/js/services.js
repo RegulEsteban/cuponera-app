@@ -101,7 +101,11 @@ angular.module('cuponeraApp.services', ['ngResource'])
             return base;
         },
         signin: function (form) {
-            return $http.post(base+'/api/v1/bucketList/auth/login', form);
+            //return $resource(base+'/auth/login', form);
+            return $http.post(base+'/auth/login', form, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            });
         },
         signup: function (form) {
             return $http.post(base+'/api/v1/bucketList/auth/register', form);

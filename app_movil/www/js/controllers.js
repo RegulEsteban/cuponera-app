@@ -231,4 +231,53 @@ angular.module('cuponeraApp.controllers', ['ionic'])
         });
     };
 })
+.controller('SignInCtrl', function ($rootScope, $scope, API, $window, $ionicPopup, $timeout) {
+    // if the user is already logged in, take him to his bucketlist
+    if ($rootScope.isSessionActive()) {
+        $window.location.href = ('#/bucket/list');
+    }
+
+    $scope.user = {
+        email: "",
+        password: ""
+    };
+    $scope.showAlert = function() {
+        
+      };
+    $scope.validateUser = function () {
+        var email = this.user.email;
+        var password = this.user.password;
+        if(!email || !password) {
+            var alertPopup = $ionicPopup.alert({
+               title: '¡Datos Incorrectos!',
+               template: 'Los campos no pueden ser vacíos.'
+            });
+            alertPopup.then(function(res) {
+                
+            });
+            return false;
+            //$rootScope.notify("Please enter valid credentials");
+        }
+        $rootScope.show('Please wait.. Authenticating');
+        var fd = new FormData();
+        fd.append('email', email);
+        fd.append('password', password);
+        API.signin(fd).success(function (data) {
+            $rootScope.setToken(email); // create a session kind of thing on the client side
+            $rootScope.hide();
+            $window.location.href = ('#/bucket/list');
+        }).error(function (error) {
+            $rootScope.hide();
+            var alertPopup = $ionicPopup.alert({
+                title: '¡Usuario inválido!',
+                template: 'Usuario y/o password incorrectos.'
+             });
+             alertPopup.then(function(res) {
+                 
+             });
+            //$rootScope.notify("Invalid Username or password");
+        });
+    };
+
+})
 ;
