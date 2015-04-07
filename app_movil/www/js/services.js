@@ -47,7 +47,7 @@ angular.module('cuponeraApp.services', ['ngResource'])
     }
   };
 })
-.factory('API', function ($rootScope, $http, $ionicLoading, $window, $resource) {
+.factory('API', function ($rootScope, $http, $ionicLoading, $window, $resource, $ionicPopup) {
     var base = "http://localhost:3000";
     $rootScope.show = function (text) {
         $rootScope.loading = $ionicLoading.show({
@@ -73,6 +73,16 @@ angular.module('cuponeraApp.services', ['ngResource'])
         $window.setTimeout(function () {
             $rootScope.hide();
         }, 1999);
+    };
+    
+    $rootScope.alert = function(titulo,desc){
+        var alertPopup = $ionicPopup.alert({
+            title: titulo,
+            template: desc
+         });
+         alertPopup.then(function(res) {
+             
+         });
     };
 
     $rootScope.doRefresh = function (tab) {

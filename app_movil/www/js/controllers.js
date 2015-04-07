@@ -1,5 +1,5 @@
 angular.module('cuponeraApp.controllers', ['ionic'])
-.controller('CuponesCtrl', function($scope, $timeout, $ionicModal, $http, API) {
+.controller('CuponesCtrl', function($scope, $timeout, $ionicModal, $http, API, $rootScope) {
     $scope.cupones = API.getCupones().query();
     $scope.doRefresh = function() {
         $timeout( function() {
@@ -10,7 +10,7 @@ angular.module('cuponeraApp.controllers', ['ionic'])
     $scope.actionComent = function(cupon){        
         $ionicModal.fromTemplateUrl('templates/modal.html', function(modal) {
             for(var i=0; i<cupon.favoritos.length;i++){
-                if(cupon.favoritos[i].id_usuario==='54f79f5937c51574172dd08d'){
+                if(cupon.favoritos[i].id_usuario===$rootScope.getToken()){
                     modal.isFav = 1;
                     break;
                 }
@@ -35,6 +35,7 @@ angular.module('cuponeraApp.controllers', ['ionic'])
         fd.append('id_cupon', id);
         fd.append('comentario', coment);
         fd.append('fecha', new Date());
+        fd.append('id_usuario', $rootScope.getToken());
         $http.post(API.getBase()+'/comentar', fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
@@ -52,7 +53,7 @@ angular.module('cuponeraApp.controllers', ['ionic'])
     $scope.addToFav = function(cupon){
         var fd = new FormData();
         fd.append('id_cupon', cupon._id);
-        fd.append('usuario', 'Esteban');
+        fd.append('id_usuario', $rootScope.getToken());
         $http.post(API.getBase()+'/doFavorito', fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
@@ -85,21 +86,66 @@ angular.module('cuponeraApp.controllers', ['ionic'])
     $state.go('tabs.home');
   };
 })
-.controller('FavoritosCtrl', function($scope, $window, API) {
+.controller('FavoritosCtrl', function($scope, $window, API, $rootScope, $ionicSlideBoxDelegate, $ionicModal) {
     var m_names = new Array("Enero", "Febrero", "Marzo","Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre","Octubre", "Noviembre", "Diciembre");
-    var cupones = {};
+    $scope.cupones = [];
     $scope.favoritos = API.getFavoritos().query();
     $scope.favoritos.$promise.then(function(data) {
         for (var i=0; i < data.length; i=i+1){
             for(var j=0;j<data[i].favoritos.length;j++){
-                if(data[i].favoritos[j].id_usuario==='54f79f5937c51574172dd08d'){
-                    cupones.push(data[i]);
+                if(data[i].favoritos[j].id_usuario===$rootScope.getToken()){
+                    $scope.cupones.push(data[i]);
                 }
             }
         }
     });
+    
+    $ionicModal.fromTemplateUrl('image-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+    
+    $scope.closeModal = function() {
+        $scope.modal.hide();
+    };
+    
+    $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+    });
+    
+    $scope.$on('modal.hide', function() {
+        // Execute action
+    });
+    
+    $scope.$on('modal.removed', function() {
+        // Execute action
+    });
+    $scope.$on('modal.shown', function() {
+        
+    });
+    
+    $scope.next = function() {
+        $ionicSlideBoxDelegate.next();
+    };
+    
+    $scope.previous = function() {
+        $ionicSlideBoxDelegate.previous();
+    };
+    
+    $scope.goToSlide = function(index) {
+        $scope.modal.show();
+        $ionicSlideBoxDelegate.slide(index);
+    };
+    
+      // Called each time the slide changes
+    $scope.slideChanged = function(index) {
+        $scope.slideIndex = index;
+    };
+    
 })
-.controller('MapCtrl', function($scope, $http, $ionicLoading, $ionicModal, $compile, $window, API) {
+.controller('MapCtrl', function($scope, $http, $ionicLoading, $ionicModal, $compile, $window, API, $rootScope) {
     $scope.$on('$ionicView.afterEnter', function(){
        if ( angular.isDefined( $scope.map ) ) {
           google.maps.event.trigger($scope.map, 'resize');
@@ -175,7 +221,7 @@ angular.module('cuponeraApp.controllers', ['ionic'])
         $scope.cupon.$promise.then(function(data) {
             $ionicModal.fromTemplateUrl('templates/modal.html', function(modal) {
               for(var i=0; i<data.favoritos.length;i++){
-                  if(data.favoritos[i].id_usuario==='54f79f5937c51574172dd08d'){
+                  if(data.favoritos[i].id_usuario===$rootScope.getToken()){
                       modal.isFav = 1;
                       break;
                   }
@@ -201,6 +247,7 @@ angular.module('cuponeraApp.controllers', ['ionic'])
         fd.append('id_cupon', id);
         fd.append('comentario', coment);
         fd.append('fecha', new Date());
+        fd.append('id_usuario', $rootScope.getToken());
         $http.post(API.getBase()+'/comentar', fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
@@ -218,7 +265,7 @@ angular.module('cuponeraApp.controllers', ['ionic'])
     $scope.addToFav = function(cupon){
         var fd = new FormData();
         fd.append('id_cupon', cupon._id);
-        fd.append('usuario', 'Esteban');
+        fd.append('id_usuario', $rootScope.getToken());
         $http.post(API.getBase()+'/doFavorito', fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
@@ -234,7 +281,7 @@ angular.module('cuponeraApp.controllers', ['ionic'])
 .controller('SignInCtrl', function ($rootScope, $scope, API, $window, $ionicPopup, $timeout) {
     // if the user is already logged in, take him to his bucketlist
     if ($rootScope.isSessionActive()) {
-        $window.location.href = ('#/bucket/list');
+        $window.location.href = ('#/tab/home');
     }
 
     $scope.user = {
@@ -247,35 +294,30 @@ angular.module('cuponeraApp.controllers', ['ionic'])
     $scope.validateUser = function () {
         var email = this.user.email;
         var password = this.user.password;
-        if(!email || !password) {
-            var alertPopup = $ionicPopup.alert({
-               title: '¡Datos Incorrectos!',
-               template: 'Los campos no pueden ser vacíos.'
-            });
-            alertPopup.then(function(res) {
-                
-            });
+        if(!email) {
+            $rootScope.alert('¡Datos Incorrectos!',"El campo 'Email' es incorrecto.");
             return false;
-            //$rootScope.notify("Please enter valid credentials");
+        }else if(!password){
+            $rootScope.alert('¡Datos Incorrectos!',"El campo 'Password' es incorrecto.");
+            return false;
         }
         $rootScope.show('Please wait.. Authenticating');
         var fd = new FormData();
         fd.append('email', email);
         fd.append('password', password);
         API.signin(fd).success(function (data) {
-            $rootScope.setToken(email); // create a session kind of thing on the client side
-            $rootScope.hide();
-            $window.location.href = ('#/bucket/list');
+            if(!data.error){
+                $rootScope.setToken(data._id); // create a session kind of thing on the client side
+                $rootScope.hide();
+                $window.location.href = ('#/tab/home');
+            }else{
+                $rootScope.hide();
+                $rootScope.alert('¡Error!',data.error);
+            }
+            
         }).error(function (error) {
             $rootScope.hide();
-            var alertPopup = $ionicPopup.alert({
-                title: '¡Usuario inválido!',
-                template: 'Usuario y/o password incorrectos.'
-             });
-             alertPopup.then(function(res) {
-                 
-             });
-            //$rootScope.notify("Invalid Username or password");
+            $rootScope.alert('¡Error!','Usuario y/o password incorrectos.');
         });
     };
 

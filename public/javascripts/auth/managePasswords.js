@@ -14,9 +14,7 @@ module.exports.cryptPassword = function (password, callback) {
 };
 
 module.exports.comparePassword = function (password, userPassword, callback) {
-    bcrypt.compare(password, userPassword, function (err, isPasswordMatch) {
-        if (err)
-            return callback(err);
-        return callback(null, isPasswordMatch);
+    bcrypt.compare(password, userPassword, function(err, res) {
+        return callback(null, res); 
     });
 };

@@ -231,7 +231,7 @@ exports.votar = function(socket){
 exports.doComentoByCupon = function(req, res){
     var input = req.body;
     Cupon.findById(input.id_cupon).exec(function(err, cupon){
-        Usuario.findOne({ 'nombre' : 'Esteban' }).exec(function (err, usuario) {
+        Usuario.findById(input.id_usuario).exec(function (err, usuario) {
             if(usuario){
                 var respuesta = {descripcion: input.comentario, fecha: input.fecha, id_usuario: usuario._id};
                 cupon.comentarios.push(respuesta);
@@ -366,7 +366,7 @@ exports.getAllUbicaciones = function(req, res, next) {
 exports.doFavorito = function(req, res){
     var input = req.body;
     Cupon.findById(input.id_cupon).exec(function(err, cupon){
-        Usuario.findOne({ 'nombre' : input.usuario }).exec(function (err, usuario) {
+        Usuario.findById(input.id_usuario).exec(function (err, usuario) {
             if(usuario){
                 var respuesta = {id_usuario: usuario._id};
                 cupon.favoritos.push(respuesta);
@@ -412,36 +412,20 @@ exports.getFavoritos = function(req, res, next){
 exports.login = function(req, res, next){
     var user = req.body;
     if (user.email.trim().length == 0 || user.password.trim().length == 0) {
-        res.writeHead(403, {
-            'Content-Type': 'application/json; charset=utf-8'
-        });
-        res.end(JSON.stringify({
-            error: "Invalid Credentials"
-        }));
+        res.json({error: "Invalid User"});
     }
-    Usuario.findOne({
-        email: req.body.email
-    }, function (err, dbUser) {
-
-        pwdMgr.comparePassword(user.password, dbUser.password, function (err, isPasswordMatch) {
-
-            if (isPasswordMatch) {
-                res.writeHead(200, {
-                    'Content-Type': 'application/json; charset=utf-8'
-                });
-                // remove password hash before sending to the client
-                dbUser.password = "";
-                res.end(JSON.stringify(dbUser));
-            } else {
-                res.writeHead(403, {
-                    'Content-Type': 'application/json; charset=utf-8'
-                });
-                res.end(JSON.stringify({
-                    error: "Invalid User"
-                }));
-            }
-
-        });
+    Usuario.findOne({email: req.body.email}, function (err, dbUser) {
+        if(dbUser){
+            pwdMgr.comparePassword(user.password, dbUser.contrasena, function (err, respuesta) {
+                if (respuesta) {
+                    dbUser.password = "";
+                    res.json(dbUser);
+                } else {
+                    res.json({error: "Email o password incorrecto."});
+                }
+            });
+        }else{
+            res.json({error: "Email o password incorrecto."});
+        }
     });
-    return next();
 };
