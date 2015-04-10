@@ -22,11 +22,17 @@ exports.creaUsuarios = function(req, res) {
     var image = req.files.file;
     var bodyUsuario = req.body.usuario;
     var tipo_usuario = {identificador: "VIZOR", descripcion: "Usuario Normal", status: 1};
+    var contrasena_hash = '';
     bodyUsuario=JSON.parse(bodyUsuario);
+    
+    pwdMgr.cryptPassword(bodyUsuario.contrasena, function(err,res){
+    	contrasena_hash = res;
+    });
+    
     var usuarioObj = {nombre: bodyUsuario.nombre, ap_paterno: bodyUsuario.ap_paterno, 
             ap_materno: bodyUsuario.ap_materno, edad: bodyUsuario.edad,
             email: bodyUsuario.email, username: bodyUsuario.username,
-            contrasena: bodyUsuario.contrasena, status: bodyUsuario.status, tipo_usuario: [tipo_usuario],
+            contrasena: contrasena_hash, status: bodyUsuario.status, tipo_usuario: [tipo_usuario],
             avatar: fs.readFileSync(image.path), extension_avatar: image.type, avatar_binary: new Buffer(fs.readFileSync(image.path)).toString('base64')};
     
     var usuario=new Usuario(usuarioObj);

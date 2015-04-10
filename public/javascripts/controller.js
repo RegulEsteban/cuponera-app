@@ -1,10 +1,9 @@
-function UsuariosController($scope, $sce, $location, Usuario, $http, fileReader){
+function UsuariosController($scope, $sce, $location, Usuario, $http, fileReader, $window, API, $rootScope){
     $scope.confirm_contrasena = '';
     $scope.active = '';
     $scope.showButton = true;
     $scope.imagen = '';
-    $scope.usuario = {nombre: '', ap_paterno: '', ap_materno: '', edad: '', email: '', username: '',
-        contrasena: '', status: 1};
+    $scope.usuario = {nombre: '', ap_paterno: '', ap_materno: '', edad: '', email: '', username: '', contrasena: '', status: 1};
     $scope.progress = 0;
     $scope.error = $sce.trustAsHtml('');
     
@@ -24,17 +23,23 @@ function UsuariosController($scope, $sce, $location, Usuario, $http, fileReader)
     $scope.removeImage = function(){
         $scope.imageSrc = '';
         $scope.showButton = true;
+        $scope.imagen = '';
+        $scope.progress = 0;
     };
     
     $scope.crearUsuario = function(){
+    	$scope.error = $sce.trustAsHtml('');
         var usuario = $scope.usuario;
         var file = $scope.imagen;
         var fd = new FormData();
         fd.append('file', file);
         fd.append('usuario', angular.toJson(usuario));
-
-        if($scope.confirm_contrasena != usuario.contrasena){
+        if(file == '' || file == undefined){
+        	$scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >Selecciona una imagen de perfil.</div>");
+        	return false;
+        }else if($scope.confirm_contrasena != usuario.contrasena){
             $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >Las <strong>contraseñas</strong> no coinciden.</div>");
+            return false;
         }else{
             $http.post('/usuarios', fd, {
                 transformRequest: angular.identity,
@@ -42,19 +47,12 @@ function UsuariosController($scope, $sce, $location, Usuario, $http, fileReader)
             })
             .success(function(data) {
                 alert('¡Usuario registrado exitósamente!');
-                $location.path('usuarios');
+                $rootScope.setToken(data._id); // create a session kind of thing on the client side
+                $window.location.href = ('#/cuponera');
             })
             .error(function(data) {
-                console.log('Error: '+data);
+            	$scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >"+data+"</div>");
             });
-//            var nuevoUsuario=new Usuario(usuario);
-//            nuevoUsuario.$save(function (error, resp){
-//                if(!error.error){
-//                    $location.path('usuarios');
-//                }else{
-//                    alert('No se pudo crear el usuario, lo sentimos. :');
-//                }
-//            });
         }
     };
 }

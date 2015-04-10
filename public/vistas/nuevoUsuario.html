@@ -1,82 +1,87 @@
 <div class="page-header">
-	<h1>Nuevo Usuario</h1>
+	<h1>Reg&iacute;strate</h1>
 </div>
-<form role="form" ng-submit="crearUsuario()">
-	<div class="panel panel-default">
-	  	<div class="panel-body">
-	    	<div class="col-md-6">
-	    		<div class="form-group">
-					<label for="nombre">Nombre(s)</label>
-					<input type="text" ng-model="usuario.nombre" class="form-control" id="nombre" placeholder="Ingresar nombre o nombres">
-				</div>
-				<div class="form-group">
-					<label for="ap_paterno">Apellido Paterno</label>
-					<input type="text" ng-model="usuario.ap_paterno" class="form-control" id="ap_paterno" placeholder="Ingresar apellido paterno">
-				</div>
-				<div class="form-group">
-					<label for="ap_materno">Apellido Materno</label>
-					<input type="text" ng-model="usuario.ap_materno" class="form-control" id="ap_materno" placeholder="Ingresar apellido materno">
-				</div>
-				<div class="form-group">
-					<label for="edad">Edad</label>
-					<input type="number" ng-model="usuario.edad" class="form-control" id="edad" placeholder="Ingresar edad">
-				</div>
-	    	</div>
-	    	<div class="col-md-6">
-	    		<div class="form-group">
-					<label for="email">E-mail</label>
-					<input type="email" ng-model="usuario.email" class="form-control" id="email" placeholder="Ingresar e-mail">
-				</div>
-				<div class="form-group">
-					<label for="username">Nombre de Usuario</label>
-					<input type="text" ng-model="usuario.username" class="form-control" id="username" placeholder="Ingresar nombre de usuario">
-				</div>
-				<div class="form-group">
-					<label for="contrasena">Contraseña</label>
-					<input type="password" ng-model="usuario.contrasena" class="form-control" id="contrasena" placeholder="Ingresar contraseña">
-				</div>
-				<div class="form-group">
-					<label for="contrasena_confirm">Confirmar Contraseña</label>
-					<input type="password" ng-model="confirm_contrasena" class="form-control" id="contrasena_confirm" placeholder="Vuelve a ingresar la contraseña">
-				</div>
-	    	</div>
-	    	<div class="col-md-12">
-		    	<div class="form-group">
-			    	<label>Avatar</label>
-					<br>
+<div class="container">
+	<div ng-include="'vistas/menu_user.html'"></div>
+    <div class="row">
+		<form role="form">
+			<div class="panel panel-default">
+			  	<div class="panel-body">
+			    	<div class="col-md-6">
+			    		<div class="form-group">
+							<label for="nombre">Nombre(s)</label>
+							<input type="text" ng-model="usuario.nombre" class="form-control" id="nombre" placeholder="Ingresar nombre o nombres" required>
+						</div>
+						<div class="form-group">
+							<label for="ap_paterno">Apellido Paterno</label>
+							<input type="text" ng-model="usuario.ap_paterno" class="form-control" id="ap_paterno" placeholder="Ingresar apellido paterno" required>
+						</div>
+						<div class="form-group">
+							<label for="ap_materno">Apellido Materno</label>
+							<input type="text" ng-model="usuario.ap_materno" class="form-control" id="ap_materno" placeholder="Ingresar apellido materno" required>
+						</div>
+						<div class="form-group">
+							<label for="edad">Edad</label>
+							<input type="number" ng-model="usuario.edad" class="form-control" id="edad" placeholder="Ingresar edad" required>
+						</div>
+			    	</div>
+			    	<div class="col-md-6">
+			    		<div class="form-group">
+							<label for="email">E-mail</label>
+							<input type="email" ng-model="usuario.email" class="form-control" id="email" placeholder="Ingresar e-mail" required>
+						</div>
+						<div class="form-group">
+							<label for="username">Nombre de Usuario</label>
+							<input type="text" ng-model="usuario.username" class="form-control" id="username" placeholder="Ingresar nombre de usuario" required>
+						</div>
+						<div class="form-group">
+							<label for="contrasena">Contraseña</label>
+							<input type="password" ng-model="usuario.contrasena" class="form-control" id="contrasena" placeholder="Ingresar contraseña" required>
+						</div>
+						<div class="form-group">
+							<label for="contrasena_confirm">Confirmar Contraseña</label>
+							<input type="password" ng-model="confirm_contrasena" class="form-control" id="contrasena_confirm" placeholder="Vuelve a ingresar la contraseña" required>
+						</div>
+			    	</div>
+			    	<div class="col-md-12">
+				    	<div class="form-group">
+					    	<label>Avatar</label>
+							<br>
+					  	</div>
+						<div class="row">
+					   		<div class="col-md-6">
+						   		<div class="thumbnail" ng-show="showButton" >
+						    		<img src="http://www.placehold.it/370x370/EFEFEF/AAAAAA&text=Sin+imagen" />
+						   		</div>
+						   		<div class="thumbnail" ng-hide="showButton">
+						     		<img ng-src="{{imageSrc}}" />
+						   		</div>
+					   		</div>
+					   		<div class="col-md-6">
+					   			<div class="btn btn-success inputWrapper" ng-show="showButton">
+					    			Seleccionar imagen <input type="file" file-model="imagen" name="imagen" id="imagen" class="form-control fileInput" ng-file-select="onFileSelect($files)"><br/>
+					    		</div>
+					    		<button type="button" class="btn btn-danger" ng-hide="showButton" ng-click="removeImage()">Eliminar imagen</button>
+						   		<br/>
+						   		<br/>
+					   			<p>Only PNG,GIF,JPG files allowed.</p>
+					   			<progressbar max="100" value="progress*100"><span style="color:white; white-space:nowrap;">{{progress*100}} / {{100}}</span></progressbar>
+					   		</div>
+					  	</div>
+					  	<div ng-bind-html="error"></div>
+				  	</div>
+				  	<div class="col-md-12">
+	      				<button class="btn btn-primary pull-right" ng-click="crearUsuario()"><h3>Registrarse</h3></button>
+	    			</div>
 			  	</div>
-				<div class="row">
-			   		<div class="col-md-6">
-				   		<div class="thumbnail" ng-show="showButton" >
-				    		<img src="http://www.placehold.it/370x370/EFEFEF/AAAAAA&text=Sin+imagen" />
-				   		</div>
-				   		<div class="thumbnail" ng-hide="showButton">
-				     		<img ng-src="{{imageSrc}}" />
-				   		</div>
-			   		</div>
-			   		<div class="col-md-6">
-			   			<div class="btn btn-success inputWrapper" ng-show="showButton">
-			    			Seleccionar imagen <input type="file" file-model="imagen" name="imagen" id="imagen" class="form-control fileInput" ng-file-select="onFileSelect($files)"><br/>
-			    		</div>
-			    		<button type="button" class="btn btn-danger" ng-hide="showButton" ng-click="removeImage()">Eliminar imagen</button>
-				   		<br/>
-				   		<br/>
-			   			<p>Only PNG,GIF,JPG files allowed.</p>
-			   			<progressbar max="100" value="progress*100"><span style="color:white; white-space:nowrap;">{{progress*100}} / {{100}}</span></progressbar>
-			   		</div>
-			  	</div>
+			</div>
+			<p><hr/></p>
+		  	<div class="row">
+		    	<div class="col-xs-6">
+		      		<a href="#/cuponera" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Regresar a la Lista de Cupones</a>
+		    	</div>
 		  	</div>
-		  	<div ng-bind-html="error"></div>
-	  	</div>
+		  	<p>&nbsp;</p>
+		</form>
 	</div>
-	<p><hr></p>
-  	<div class="row">
-    	<div class="col-xs-6">
-      		<a href="#/cuponera" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Regresar a la Lista de Cupones</a>
-    	</div>
-    	<div class="col-xs-6">
-      		<button class="btn btn-primary pull-right" type="submit">Registrarse</button>
-    	</div>
-  	</div>
-  	<p>&nbsp;</p>
-</form>
+</div>
