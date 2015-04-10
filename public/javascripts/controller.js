@@ -63,12 +63,27 @@ function UsuariosListController($scope, Usuario){
     $scope.usuarios = Usuario.query();
 }
 
-function CuponListController($scope, Cupon){
+function CuponListController($scope, Cupon, API, $rootScope){
 	$scope.cupones = Cupon.query();
 }
 
-function CuponImagenController($scope, $http, ImagenCupon){
+function CuponImagenController($scope, $http, ImagenCupon, API, $rootScope){
     "use strict";
+    if ($rootScope.isSessionActive()) {
+        $scope.usuario = API.getUserById().get({id: $rootScope.getToken()});
+        $scope.usuario.$promise.then(function(data) {
+            if(data.tipo_usuario[0].identificador==$rootScope.getVisor()){
+                $scope.menu_login='visor';
+            }else if(data.tipo_usuario[0].identificador==$rootScope.getProv()){
+                $scope.menu_login='proveedor';
+            }else{
+                $scope.menu_login='';
+            }
+        });
+    }else{
+        $scope.menu_login='';
+    }
+    
 	$scope.cupones = ImagenCupon.query();
 	$scope.comentario = '';
 	$scope.start = 0;
@@ -160,7 +175,13 @@ function CuponItemController($scope, $routeParams, socket, Cupon){
 	};
 }
 
-function CuponUploadController($scope, $http, $location, fileReader){
+function CuponUploadController($scope, $http, $location, fileReader, API, $rootScope, $window){
+    if ($rootScope.isSessionActive()) {
+        $scope.menu_login='proveedor';
+    }else{
+        $window.location.href = ('#/login');
+    }
+    
     $scope.active = '';
     $scope.showButton = true;
     $scope.imagen = '';
@@ -269,6 +290,47 @@ function ProveedorController($scope, $sce, $location, Usuario, $http, fileReader
     };
 }
 
-function CuponesController($scope){
+function CuponesController($scope, API, $rootScope, $window){
+    if ($rootScope.isSessionActive()) {
+        $scope.menu_login='proveedor';
+    }else{
+        $window.location.href = ('#/login');
+    }
+}
+
+function SignInControlller($scope, $sce, API, $rootScope, $window){
+    if ($rootScope.isSessionActive()) {
+        $window.location.href = ('#/cuponera');
+    }
     
+    $scope.user = {
+        email: "",
+        password: ""
+    };
+
+    $scope.validateUser = function () {
+        $scope.error = $sce.trustAsHtml('');
+        var email = this.user.email;
+        var password = this.user.password;
+        if(!email) {
+            $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >El campo <strong>email</strong> no puede estar vacío.</div>");
+            return false;
+        }else if(!password){
+            $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >El campo <strong>password</strong> no puede estar vacío.</div>");
+            return false;
+        }
+        var fd = new FormData();
+        fd.append('email', email);
+        fd.append('password', password);
+        API.signin(fd).success(function (data) {
+            if(!data.error){
+                $rootScope.setToken(data._id); // create a session kind of thing on the client side
+                $window.location.href = ('#/cuponera');
+            }else{
+                $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >"+data.error+"</div>");
+            }
+        }).error(function (error) {
+            $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >Usuario y/o password incorrectos.</div>");
+        });
+    };
 }

@@ -4322,6 +4322,17 @@ ion-tabs.tabs-color-active-dark .tab-item {
     background-color: rgba(0, 0, 0, 0); }
     .modal-backdrop.active {
       background-color: rgba(0, 0, 0, 0.5); } }
+      
+@media (min-width: 100px) {
+  .modal-backdrop.active {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .modal-backdrop {
+    -webkit-transition: background-color 300ms ease-in-out;
+    transition: background-color 300ms ease-in-out;
+    background-color: rgba(0, 0, 0, 0);
+  }
+}
 
 .modal-open {
   pointer-events: none; }

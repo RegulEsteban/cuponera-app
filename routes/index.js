@@ -51,23 +51,12 @@ exports.usuariosList = function(req, res){
 
 exports.findUsuarioId = function(req, res){
     var usuarioId = req.params.id;
-    Usuario.findById(usuarioId, '', {lean: true}, function(err, usuario){
+    Usuario.findById(usuarioId).populate({
+        path: 'tipo_usuario',
+        select: 'identificador',
+        options: { limit: 1 }
+      }).select('_id nombre ap_paterno ap_materno tipo_usuario').exec(function(error, usuario){
         if(usuario){
-//            var votoUsuario, eligioUsuario, totalVotos=0;
-//            for(var c in cupon.elecciones){
-//                var eleccion = cupon.elecciones[c];
-//                for(var v in eleccion.votos){
-//                    var voto = eleccion.votos[v];
-//                    totalVotos++;
-//                    if(voto.ip === (req.header('x-forwarded-for') || req.ip)){
-//                        votoUsuario=true;
-//                        eligioUsuario = {_id: eleccion._id, comentario: eleccion.comentario};
-//                    }
-//                }
-//            }
-//            cupon.votoUsuario = votoUsuario;
-//            cupon.eligioUsuario = eligioUsuario;
-//            cupon.totalVotos = totalVotos;
             res.json(usuario);
         }else{
             res.json({error: true});

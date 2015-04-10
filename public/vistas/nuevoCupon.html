@@ -1,48 +1,59 @@
 <div class="page-header">
 	<h1>Registrar Cupón</h1>
 </div>
-<form role="form" ng-submit="nuevoCupon()" enctype="multipart/form-data">
-	<div class="form-group">
-		<label for="fecha_validez">Fecha de caducidad</label>
-		<input type="date" ng-model="fecha_validez" class="form-control" name="fecha_validez" placeholder="Fecha de caducidad del cupón"><br>
+<div class="container">
+	<div ng-switch on="menu_login">
+	    <div ng-switch-when="proveedor">
+	        <div ng-include="'vistas/menu_user_proveedor.html'"></div>
+	    </div>
+	    <div ng-switch-default>
+	        <div ng-include="'vistas/menu_user.html'"></div>
+	    </div>
 	</div>
-  	<div class="form-group">
-    	<label>Imagen</label>
-		<br>
-  	</div>
-  	<div class="row">
-   		<div class="col-md-6">
-	   		<div class="thumbnail" ng-show="showButton" >
-	    		<img src="http://www.placehold.it/370x370/EFEFEF/AAAAAA&text=Sin+imagen" />
-	   		</div>
-	   		<div class="thumbnail" ng-hide="showButton">
-	     		<img ng-src="{{imageSrc}}" />
-	   		</div>
-   		</div>
-   		<div class="col-md-6">
-   			<div class="btn btn-success inputWrapper" ng-show="showButton">
-    			Seleccionar imagen <input type="file" file-model="imagen" name="imagen" id="imagen" class="form-control fileInput" ng-file-select="onFileSelect($files)"><br/>
-    		</div>
-    		<button type="button" class="btn btn-danger" ng-hide="showButton" ng-click="removeImage()">Eliminar imagen</button>
-   			<div>
-<!-- 	   			<button type="button" class="btn btn-success" ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Seleccionar una imagen</button> -->
-<!-- 		      	<button type="button" class="btn btn-warning" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Cambiar imagen</button> -->
-	   		</div>
-	   		<br/>
-   			<p>Only PNG,GIF,JPG files allowed.</p>
-   			<progressbar max="100" value="progress*100"><span style="color:white; white-space:nowrap;">{{progress*100}} / {{100}}</span></progressbar>
-   		</div>
-  	</div>
-  	<p><hr></p>
-  
-  	<div class="row">
-    	<div class="col-xs-6">
-      		<a href="#/cuponera" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Regresar a la Lista de Cupones</a>
-    	</div>
-    	<div class="col-xs-6">
-      		<button class="btn btn-primary pull-right" type="submit" >Crear Nuevo Cupón &raquo;</button>
-    	</div>
-  	</div>
-  <p>&nbsp;</p>
-  
-</form>
+    <div class="row">
+		<form role="form" ng-submit="nuevoCupon()" enctype="multipart/form-data">
+			<div class="form-group">
+				<label for="fecha_validez">Fecha de caducidad</label>
+				<input type="date" ng-model="fecha_validez" class="form-control" name="fecha_validez" placeholder="Fecha de caducidad del cupón"><br>
+			</div>
+		  	<div class="form-group">
+		    	<label>Imagen</label>
+				<br>
+		  	</div>
+		  	<div class="row">
+		   		<div class="col-md-6">
+			   		<div class="thumbnail" ng-show="showButton" >
+			    		<img src="http://www.placehold.it/370x370/EFEFEF/AAAAAA&text=Sin+imagen" />
+			   		</div>
+			   		<div class="thumbnail" ng-hide="showButton">
+			     		<img ng-src="{{imageSrc}}" />
+			   		</div>
+		   		</div>
+		   		<div class="col-md-6">
+		   			<div class="btn btn-success inputWrapper" ng-show="showButton">
+		    			Seleccionar imagen <input type="file" file-model="imagen" name="imagen" id="imagen" class="form-control fileInput" ng-file-select="onFileSelect($files)"><br/>
+		    		</div>
+		    		<button type="button" class="btn btn-danger" ng-hide="showButton" ng-click="removeImage()">Eliminar imagen</button>
+		   			<div>
+		<!-- 	   			<button type="button" class="btn btn-success" ng-hide="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Seleccionar una imagen</button> -->
+		<!-- 		      	<button type="button" class="btn btn-warning" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}">Cambiar imagen</button> -->
+			   		</div>
+			   		<br/>
+		   			<p>Only PNG,GIF,JPG files allowed.</p>
+		   			<progressbar max="100" value="progress*100"><span style="color:white; white-space:nowrap;">{{progress*100}} / {{100}}</span></progressbar>
+		   		</div>
+		  	</div>
+		  	<p><hr></p>
+		  
+		  	<div class="row">
+		    	<div class="col-xs-6">
+		      		<a href="#/cuponera" class="btn btn-default" role="button"><span class="glyphicon glyphicon-arrow-left"></span> Regresar a la Lista de Cupones</a>
+		    	</div>
+		    	<div class="col-xs-6">
+		      		<button class="btn btn-primary pull-right" type="submit" >Crear Nuevo Cupón &raquo;</button>
+		    	</div>
+		  	</div>
+		  <p>&nbsp;</p>
+		</form>
+	</div>
+</div>

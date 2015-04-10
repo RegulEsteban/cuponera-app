@@ -10,20 +10,6 @@ html(lang='en', ng-app='cuponeraApp')
 		link(rel='stylesheet' href='/stylesheets/example.css')
 		
 	body(ng-controller="CuponesController" ng-style="style")
-		nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
-			div.navbar-header.page-scroll
-				a.navbar-brand.page-scroll(href='#/cuponera') CPNS
-			ul.nav.navbar-nav
-				li
-					a(href='#/usuarios') Usuarios
-				li
-					a(href='#/imagenes') Cupones
-				li
-					a(href='#/nuevoUsuario') Nuevo Usuario
-				li
-					a(href='#/nuevoCupon') Registrar Cupón
-				li
-					a(href='#/nuevoProveedor') Registrar Proveedor
 		div.container
 			div(ng-view)
 		
@@ -43,6 +29,8 @@ html(lang='en', ng-app='cuponeraApp')
 		script(src='/javascripts/src/angular-messages.js')
 		script(src='/javascripts/src/satellizer.js')
 		
+		script(src='//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js')
+		script(src='//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js')
 		script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
 		script(src='/javascripts/bootstrap/ui-bootstrap-custom-0.12.1.js')
 		script(src='/javascripts/bootstrap/ui-bootstrap-custom-0.12.1.min.js')

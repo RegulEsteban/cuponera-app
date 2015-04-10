@@ -1,9 +1,11 @@
 <ion-modal-view>
   <ion-header-bar class="bar bar-header bar-assertive">
     <h1 class="title">Comentar</h1>
-    <button class="button button-clear button-primary" ng-click="closeModal()">Cancel</button>
+    <button class="button button-clear button-primary" ng-click="closeModal()">
+    	<i class="icon ion-ios-close-empty"></i>
+   	</button>
   </ion-header-bar>
-  <ion-content class="padding">
+  <ion-content class="padding" style="margin-bottom:140px;">
 	 <div class="list card">
 	  	<div class="item item-avatar">
 	    	<img ng-src="data:{{modal.cupon.id_usuario.extension_avatar}};base64,{{modal.cupon.id_usuario.avatar_binary}}"/>
@@ -14,24 +16,35 @@
 		<div class="item item-image">
 			<img ng-src="{{modal.cupon.binaryImage}}"  alt="{{modal.cupon.nombre}}"/>
 		</div>
+		
+		<div class="item">
+		    <div class="range range-energized">
+			  <i class="icon ion-ios-star-outline"></i>
+			  <input type="range" name="volume" min="0" max="5" value="0" ng-model="data.volume">
+			  <i class="icon ion-ios-star"></i>
+			</div>
+			<p>Califica : {{data.volume}}</p>
+		</div>
+		
 		<div class="item tabs tabs-secondary tabs-icon-left">
 		    <a class="tab-item" href="#" >
 		    	<div ng-switch on="modal.isFav">
 				    <div ng-switch-when="1">
-				        <i class="icon ion-checkmark-circled"></i>
+				        <i class="icon ion-ios-checkmark striped"></i>
 				    </div>
 				    <div ng-switch-default ng-click="addToFav(modal.cupon)">
-				        <i class="icon ion-star"></i> Favorito
+				        <i class="icon ion-ios-circle-outline striped"></i> Favorito
 				    </div>
 				</div>
 		    </a>
-		    <a class="tab-item" href="#" ng-click="addToFav(cupon)">
-		      <i class="icon ion-star"></i> Califica
-		    </a>
-		</div>
+		    <a class="tab-item" href="#">
+				<i class="icon ion-share"></i> Compartir
+			</a>
+		</div>		
+		
 	  	<div ng-switch on="modal.cupon.comentarios.length">
 			<a class="item item-icon-left assertive" href="#" ng-switch-when="0">
-		    	<i class="icon ion-music-note"></i>Sin comentarios
+		    	<i class="icon ion-ios-chatbubble-outline"></i> Sin comentarios
 		  	</a>
 		  	<a class="item item-avatar" href="#" ng-repeat="comment in modal.cupon.comentarios | limitTo: modal.end">
 	      		<img ng-src="data:{{comment.id_usuario.extension_avatar}};base64,{{comment.id_usuario.avatar_binary}}"/>
@@ -40,12 +53,20 @@
     		</a>
 		</div>
 	</div>
-    
-    <div class="list">
-	  <label class="item item-input">
-	    <textarea ng-model="comentario" placeholder="Comentar"></textarea>
-	  </label>
-	  <button class="button button-full button-positive" ng-click="doComment(modal.cupon._id, comentario, modal.cupon.comentarios)">Comentar</button>
-	</div>
   </ion-content>
+  <div class="tabs tabs-stable foo" style="height:auto;">
+     <div class="row">
+         <div class="col">
+         	<div class="list">
+			  <label class="item item-input">
+			    <textarea ng-model="comentario" placeholder="Comentar"></textarea>
+			  </label>
+			  <button class="button button-full button-balanced" ng-click="doComment(modal.cupon._id, comentario, modal.cupon.comentarios)">
+			  	<i class="icon ion-ios-chatbubble-outline"></i> Comentar
+			  </button>
+			</div>
+         </div>
+     </div>
+  </div>
+  
 </ion-modal-view>

@@ -178,7 +178,7 @@ angular.module('cuponeraApp.controllers', ['ionic'])
                 if(data[cupon].id_usuario){
                     for(var j=0;j<data[cupon].id_usuario.ubicaciones.length;j++){
                         var c = data[cupon]._id;
-                        var contentString = '<div class="infobox"><a ng-click="clickTest(\'' + c + '\')" >'+"<img ng-src='"+data[cupon].binaryImage+"' class='thumbnail' /></a></div>";
+                        var contentString = '<div class="infobox">'+"<img ng-src='"+data[cupon].binaryImage+"' class='image-thum' "+'ng-click="clickTest(\'' + c + '\')"'+"/>"+'</div>';
                         var compiled = $compile(contentString)($scope);
                         marker = new google.maps.Marker({
                             position: new google.maps.LatLng(data[cupon].id_usuario.ubicaciones[j].lat,data[cupon].id_usuario.ubicaciones[j].lon),

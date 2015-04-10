@@ -77,4 +77,95 @@ factory('socket', function($rootScope) {
        return deferred.promise;
    };
    return {readAsDataUrl: readAsDataURL};
-}]);
+}])
+.factory('API', function ($rootScope, $http, $window, $resource) {
+    var base = "";
+
+    $rootScope.logout = function () {
+        $rootScope.setToken("");
+        $window.location.href = '#/login';
+    };
+
+    $rootScope.setToken = function (token) {
+        return $window.localStorage.token = token;
+    };
+    
+    $rootScope.getToken = function () {
+        return $window.localStorage.token;
+    };
+    
+    $rootScope.isSessionActive = function () {
+        return $window.localStorage.token ? true : false;
+    };
+    
+    $rootScope.getVisor = function(){
+        return "VIZOR";
+    };
+    
+    $rootScope.getProv = function(){
+        return "PROVEEDOR";
+    };
+    
+    return {
+        getBase: function () {
+            return base;
+        },
+        signin: function (form) {
+            return $http.post(base+'/auth/login', form, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            });
+        },
+        signup: function (form) {
+            return $http.post(base+'/api/v1/bucketList/auth/register', form);
+        },
+        getAll: function (email) {
+            return $http.get(base+'/api/v1/bucketList/data/list', {
+                method: 'GET',
+                params: {
+                    token: email
+                }
+            });
+        },
+        getOne: function (id, email) {
+            return $http.get(base+'/api/v1/bucketList/data/item/' + id, {
+                method: 'GET',
+                params: {
+                    token: email
+                }
+            });
+        },
+        saveItem: function (form, email) {
+            return $http.post(base+'/api/v1/bucketList/data/item', form, {
+                method: 'POST',
+                params: {
+                    token: email
+                }
+            });
+        },
+        putItem: function (id, form, email) {
+            return $http.put(base+'/api/v1/bucketList/data/item/' + id, form, {
+                method: 'PUT',
+                params: {
+                    token: email
+                }
+            });
+        },
+        getCupones: function () {
+            return $resource(base+'/imagenesMovil');
+        },
+        getUbicaciones: function () {
+            return $resource(base+'/getAllUbicaciones');
+        },
+        getCuponById: function () {
+            return $resource(base+'/getCuponById/:id', {id:'@id'});
+        },
+        getUserById: function () {
+            return $resource(base+'/usuarios/:id', {id:'@id'});
+        },
+        getFavoritos: function () {
+            return $resource(base+'/getFavoritos');
+        }
+    };
+})
+;

@@ -1,7 +1,7 @@
-angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponService', 'uiGmapgoogle-maps', 'ui.bootstrap'])
+angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponService', 'uiGmapgoogle-maps', 'ui.bootstrap','mgcrea.ngStrap'])
     .config(['$routeProvider', function($routeProvider, $authProvider){
 	$routeProvider.
-		when('/cuponera', {
+		when('/cuponera2', {
 			templateUrl: 'vistas/list.html',
 			controller: CuponListController
 		}).
@@ -17,7 +17,7 @@ angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponServi
 			templateUrl: 'vistas/upload.html',
 			controller: CuponUploadController
 		}).
-		when('/imagenes', {
+		when('/cuponera', {
 			templateUrl: 'vistas/listCupones.html',
 			controller: CuponImagenController
 		}).
@@ -40,6 +40,10 @@ angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponServi
         when('/addUbicaciones', {
             templateUrl: 'vistas/agregarUbicaciones.html',
             controller: CuponesController
+        }).
+        when('/login', {
+            templateUrl: 'vistas/login.html',
+            controller: SignInControlller
         }).
 		otherwise({
 			redirectTo: '/cuponera'
@@ -85,6 +89,12 @@ angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponServi
     libraries: 'weather,geometry,visualization'
   });
 }])
+.config(function($alertProvider) {
+    angular.extend($alertProvider.defaults, {
+        animation: 'am-fade-and-slide-top',
+        placement: 'top'
+    });
+})
 .filter('slice', function() {
   return function(arr, start, end) {
     return arr.slice(start, end);
@@ -155,40 +165,7 @@ angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponServi
             zoom: 12,
             dragging: false,
             bounds: {},
-            markers: [{
-                id: 1,
-                latitude: 19,
-                longitude: -99,
-                showWindow: false,
-                options: {
-                    animation: 2,
-                    labelContent: 'Markers id 1',
-                    labelAnchor: "22 0",
-                    labelClass: "marker-labels"
-                }
-            },{
-                id: 2,
-                latitude: 15,
-                longitude: 30,
-                showWindow: false,
-                options: {
-                    labelContent: 'Markers id 2',
-                    labelAnchor: "26 0",
-                    labelClass: "marker-labels"
-                }
-            },{
-                id: 3,
-                icon: 'assets/images/plane.png',
-                latitude: 37,
-                longitude: -122,
-                showWindow: false,
-                title: 'Plane',
-                options: {
-                    labelContent: 'Markers id 3',
-                    labelAnchor: "26 0",
-                    labelClass: "marker-labels"
-                }
-            }],
+            markers: [],
             clickMarkers: [],
             dynamicMarkers: [],
             randomMarkers: [],
@@ -260,30 +237,6 @@ angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponServi
       } else {
         alert("Browser doesn't support Geolocation");
       }
-    
-    $scope.removeMarkers = function () {
-
-        $scope.map.markers = [];
-        $scope.map.markers2 = [];
-        $scope.map.dynamicMarkers = [];
-        $scope.map.randomMarkers = [];
-        $scope.map.mexiMarkers = [];
-        $scope.map.clickMarkers = [];
-        $scope.map.polylines = [];
-        $scope.map.polygons = [];
-        $scope.map.polygons2 = [];
-        $scope.map.circles = [];
-        $scope.map.rectangle = null;
-        $scope.map.clickedMarker = null;
-        $scope.staticMarker = null;
-        $scope.map.infoWindow.show = false;
-        $scope.map.templatedInfoWindow.show = false;
-        $scope.map.templatedInfoWindow.coords = null;
-        $scope.map.infoWindowWithCustomClass.show = false;
-        $scope.map.infoWindowWithCustomClass.coords = null;
-        $scope.map.infoWindow.show = false;
-        $scope.map.infoWindow.coords = null;
-    };
     
     $scope.refreshMap = function () {
         $scope.map.control.refresh({latitude: 32.779680, longitude: -79.935493});

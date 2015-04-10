@@ -2,6 +2,18 @@
 	<h3>Images  <span class="glyphicon glyphicon-tag"></span></h3>
 </div>
 <div class="container">
+	<div ng-switch on="menu_login">
+	    <div ng-switch-when="visor">
+	        <div ng-include="'vistas/menu_user_visor.html'"></div>
+	    </div>
+	    <div ng-switch-when="proveedor">
+	        <div ng-include="'vistas/menu_user_proveedor.html'"></div>
+	    </div>
+	    <div ng-switch-default>
+	        <div ng-include="'vistas/menu_user.html'"></div>
+	    </div>
+	</div>
+	
     <div class="row">
         <div class="[ col-xs-12 col-sm-6 ]" ng-repeat="cupon in cupones">
             <div class="[ panel panel-default ] panel-google-plus">

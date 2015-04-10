@@ -3,13 +3,8 @@
 		<a class="item item-thumbnail-left" href="#" ng-repeat="cupon in cupones" ng-click="goToSlide($index)">
 	      <img ng-src="{{cupon.binaryImage}}">
 	      <h2>{{cupon.id_usuario.empresa}}</h2>
-	      <p>{{cupon.fecha_validez}}</p>
+	      <p><span><strong>Válido hasta: </strong>{{cupon.fecha_validez}}</span></p>
 	    </a>
-<!-- 			<ion-slide-box on-slide-changed="slideHasChanged(index)" show-pager="false" active-slide="currentIndex" ng-switch on="cupones.length"> -->
-<!--                 	<ion-slide ng-repeat="cupon in cupones" style="background: #000"> -->
-<!--                     	<img ng-src="{{cupon.binaryImage}}" class="fullscreen-image"/> -->
-<!--                  	</ion-slide> -->
-<!--             </ion-slide-box> -->
 	<script id="image-modal.html" type="text/ng-template">
 		<div class="modal image-modal transparent" ng-click="closeModal()">
         	<ion-slide-box on-slide-changed="slideChanged(index)" show-pager="false">
