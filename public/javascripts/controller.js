@@ -173,13 +173,13 @@ function CuponItemController($scope, $routeParams, socket, Cupon){
 	};
 }
 
-function CuponUploadController($scope, $http, $location, fileReader, API, $rootScope, $window){
+function CuponUploadController($scope, $http, $location, fileReader, API, $rootScope, $window, $sce){
     if ($rootScope.isSessionActive()) {
         $scope.menu_login='proveedor';
     }else{
         $window.location.href = ('#/login');
     }
-    
+    $scope.error = $sce.trustAsHtml('');
     $scope.active = '';
     $scope.showButton = true;
     $scope.imagen = '';
@@ -213,34 +213,43 @@ function CuponUploadController($scope, $http, $location, fileReader, API, $rootS
     $scope.removeImage = function(){
         $scope.imageSrc = '';
         $scope.showButton = true;
+		$scope.progress = 0;
+		$scope.imagen = '';
     };
 	
     $scope.nuevoCupon = function(){
+		$scope.error = $sce.trustAsHtml('');
 		var file = $scope.imagen;
         var fd = new FormData();
         fd.append('file', file);
         fd.append('fecha', $scope.fecha_validez);
+		fd.append('id_usuario', $rootScope.getToken());
+		
+		if(file == '' || file == undefined){
+        	$scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >Selecciona una imagen de perfil.</div>");
+        	return false;
+		}
+		
 		$http.post('/upload', fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
         })
         .success(function(data) {
             alert('¡Cupón registrado exitósamente!');
-            $location.path('cuponera');
+            $window.location.href = ('#/cuponera');
         })
         .error(function(data) {
-            console.log('Error: '+data);
+            $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >"+data+"</div>");
         });
 	};
 }
 
-function ProveedorController($scope, $sce, $location, Usuario, $http, fileReader){
+function ProveedorController($scope, $sce, $location, Usuario, $http, fileReader, $window){
     $scope.confirm_contrasena = '';
     $scope.active = '';
     $scope.showButton = true;
     $scope.imagen = '';
-    $scope.usuario = {nombre: '', ap_paterno: '', ap_materno: '', edad: '', email: '', username: '',
-            contrasena: '', status: 1, rfc: '', empresa: ''};
+    $scope.usuario = {nombre: '', ap_paterno: '', ap_materno: '', edad: '', email: '', username: '', contrasena: '', status: 1, rfc: '', empresa: ''};
     $scope.progress = 0;
     $scope.error = $sce.trustAsHtml('');
     
@@ -260,29 +269,36 @@ function ProveedorController($scope, $sce, $location, Usuario, $http, fileReader
     $scope.removeImage = function(){
         $scope.imageSrc = '';
         $scope.showButton = true;
+        $scope.progress = 0;
+        $scope.imagen = '';
     };
     
     $scope.crearUsuario = function(){
+		$scope.error = $sce.trustAsHtml('');
         var usuario = $scope.usuario;
         var file = $scope.imagen;
         var fd = new FormData();
         fd.append('file', file);
         fd.append('usuario', angular.toJson(usuario));
 
-        if($scope.confirm_contrasena != usuario.contrasena){
+        if(file == '' || file == undefined){
+        	$scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >Selecciona una imagen de perfil.</div>");
+        	return false;
+        }else if($scope.confirm_contrasena != usuario.contrasena){
             $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >Las <strong>contraseñas</strong> no coinciden.</div>");
+            return false;
         }else{
             $http.post('/nuevoProveedor', fd, {
                 transformRequest: angular.identity,
                 headers: {'Content-Type': undefined}
             })
             .success(function(data) {
-                alert('¡Cuponero registrado exitósamente!');
-                console.log(data);
-                $location.path('/addUbicaciones').search({id_user: 'asdfghjkl'});
+                alert('¡Usuario registrado exitósamente!');
+                $rootScope.setToken(data._id); // create a session kind of thing on the client side
+                $window.location.href = ('#/cuponera');
             })
             .error(function(data) {
-                console.log('Error: '+data);
+            	$scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >"+data+"</div>");
             });
         }
     };

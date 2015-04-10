@@ -22,26 +22,23 @@ exports.creaUsuarios = function(req, res) {
     var image = req.files.file;
     var bodyUsuario = req.body.usuario;
     var tipo_usuario = {identificador: "VIZOR", descripcion: "Usuario Normal", status: 1};
-    var contrasena_hash = '';
     bodyUsuario=JSON.parse(bodyUsuario);
     
-    pwdMgr.cryptPassword(bodyUsuario.contrasena, function(err,res){
-    	contrasena_hash = res;
-    });
-    
-    var usuarioObj = {nombre: bodyUsuario.nombre, ap_paterno: bodyUsuario.ap_paterno, 
-            ap_materno: bodyUsuario.ap_materno, edad: bodyUsuario.edad,
-            email: bodyUsuario.email, username: bodyUsuario.username,
-            contrasena: contrasena_hash, status: bodyUsuario.status, tipo_usuario: [tipo_usuario],
-            avatar: fs.readFileSync(image.path), extension_avatar: image.type, avatar_binary: new Buffer(fs.readFileSync(image.path)).toString('base64')};
-    
-    var usuario=new Usuario(usuarioObj);
-    usuario.save(function(err, doc){
-        if(err || !doc){
-            throw 'Error al guardar usuario';
-        }else{
-            res.json(doc);
-        }
+    pwdMgr.cryptPassword(bodyUsuario.contrasena, function(err,contrasena_hash){
+    	var usuarioObj = {nombre: bodyUsuario.nombre, ap_paterno: bodyUsuario.ap_paterno, 
+                ap_materno: bodyUsuario.ap_materno, edad: bodyUsuario.edad,
+                email: bodyUsuario.email, username: bodyUsuario.username,
+                contrasena: contrasena_hash, status: bodyUsuario.status, tipo_usuario: [tipo_usuario],
+                avatar: fs.readFileSync(image.path), extension_avatar: image.type, avatar_binary: new Buffer(fs.readFileSync(image.path)).toString('base64')};
+        
+        var usuario=new Usuario(usuarioObj);
+        usuario.save(function(err, doc){
+            if(err || !doc){
+                throw 'Error al guardar usuario';
+            }else{
+                res.json(doc);
+            }
+        });
     });
 };
 
@@ -75,7 +72,7 @@ exports.upload = function(req, res, next){
 	var input = req.body;
 	var user;
 
-	Usuario.findOne({ 'nombre' : 'Pablo' }, function (err, usuario) {
+	Usuario.findById(input.id_usuario, function (err, usuario) {
 	    if(usuario){
 	        var cupon_get = {nombre: image.name, extension: image.type, imagen_binary: new Buffer(fs.readFileSync(image.path)).toString('base64'), 
 	                imagen: fs.readFileSync(image.path), fecha_validez: input.fecha, id_usuario: usuario._id};
@@ -247,22 +244,24 @@ exports.createCuponero = function(req, res){
     var bodyUsuario = req.body.usuario;
     var tipo_usuario = {identificador: "PROVEEDOR", descripcion: "Usuario Empresa", status: 1};
     bodyUsuario=JSON.parse(bodyUsuario);
-    var usuarioObj = {nombre: bodyUsuario.nombre, ap_paterno: bodyUsuario.ap_paterno, 
+	pwdMgr.cryptPassword(bodyUsuario.contrasena, function(err,contrasena_hash){
+		var usuarioObj = {nombre: bodyUsuario.nombre, ap_paterno: bodyUsuario.ap_paterno, 
             ap_materno: bodyUsuario.ap_materno, edad: bodyUsuario.edad,
             email: bodyUsuario.email, username: bodyUsuario.username,
-            contrasena: bodyUsuario.contrasena, status: bodyUsuario.status,
+            contrasena: contrasena_hash, status: bodyUsuario.status,
             rfc: bodyUsuario.rfc, empresa: bodyUsuario.empresa,
             tipo_usuario: [tipo_usuario], ubicaciones: [bodyUbicaciones],
             avatar: fs.readFileSync(image.path), extension_avatar: image.type, avatar_binary: new Buffer(fs.readFileSync(image.path)).toString('base64')};
     
-    var usuario=new Usuario(usuarioObj);
-    usuario.save(function(err, doc){
-        if(err || !doc){
-            throw 'Error al guardar usuario';
-        }else{
-            res.json(doc);
-        }
-    });
+		var usuario=new Usuario(usuarioObj);
+		usuario.save(function(err, doc){
+			if(err || !doc){
+				throw 'Error al guardar usuario';
+			}else{
+				res.json(doc);
+			}
+		});
+	});
 };
 
 exports.addUbicaciones = function(req, res){
