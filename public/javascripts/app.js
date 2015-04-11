@@ -45,6 +45,10 @@ angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponServi
             templateUrl: 'vistas/login.html',
             controller: SignInControlller
         }).
+        when('/explorar', {
+            templateUrl: 'vistas/explorar_cupones.html',
+            controller: ExplorarControlller
+        }).
 		otherwise({
 			redirectTo: '/cuponera'
 		});
@@ -119,9 +123,14 @@ angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponServi
     
     $scope.proveedor = {ubicaciones: [{lat: '', lon: '', direccion: '', status: true}]};
     $scope.i = 0;
-    
+
     $scope.agregarUbicacion = function(){
-        $scope.proveedor.ubicaciones.push({lat: '', lon: '', direccion: ''});
+        if($scope.proveedor.ubicaciones[$scope.i].lat === '' || $scope.proveedor.ubicaciones[$scope.i].lon === ''){
+            alert("Ubicación incorrecta.");
+            return false;
+        }
+        $scope.proveedor.ubicaciones[$scope.i].status = false;
+        $scope.proveedor.ubicaciones.push({lat: '', lon: '', direccion: '', status: true});
         $scope.map.markers.push($scope.map.clickedMarker);
         $scope.i = $scope.i + 1;
     };
@@ -246,23 +255,6 @@ angular.module('cuponeraApp',['ngRoute', 'ngMessages', 'satellizer', 'cuponServi
 
     $scope.onMarkerClicked = onMarkerClicked;
     
-    $scope.addUbicaciones = function(){
-        var ubicaciones = $scope.proveedor;
-        var fd = new FormData();
-        fd.append('ubicaciones', angular.toJson(ubicaciones));
-        
-        $http.post('/addUbicaciones', fd, {
-            transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
-        })
-        .success(function(data) {
-            alert('¡Ubicaiones Guardadas!');
-            $location.path('/cuponera');
-        })
-        .error(function(data) {
-            console.log('Error: '+data);
-        });
-    };
 }])
 .directive("bnLazySrc", function( $window, $document ) { 
     // I manage all the images that are currently being

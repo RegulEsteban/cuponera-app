@@ -1,0 +1,44 @@
+<div class="container">
+	<div ng-switch on="menu_login">
+	    <div ng-switch-when="visor">
+	        <div ng-include="'vistas/menu_user_visor.html'"></div>
+	    </div>
+	    <div ng-switch-when="proveedor">
+	        <div ng-include="'vistas/menu_user_proveedor.html'"></div>
+	    </div>
+	    <div ng-switch-default>
+	        <div ng-include="'vistas/menu_user.html'"></div>
+	    </div>
+	</div>
+	
+	<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+		    	<h2>Explorar Cupones</h2>
+		  	</div>
+		  	<div class="panel-body">
+				<div class="col-md-4">
+					
+			  	</div>
+			  	<div class="col-md-8">
+			    	<ui-gmap-google-map 
+			         center="map.center"
+			         zoom="map.zoom"
+			         dragging="map.dragging"
+			         bounds="map.bounds"
+			         events="map.events"
+			         options="map.options"
+			         pan="true"
+			         control="map.control">
+						<ui-gmap-layer type="TrafficLayer" show="map.showTraffic"></ui-gmap-layer>
+						<ui-gmap-layer type="BicyclingLayer" show="map.showBicycling"></ui-gmap-layer>
+						<ui-gmap-drag-zoom keyboardkey="'alt'"></ui-gmap-drag-zoom>
+				        <ui-gmap-markers models="map.clickMarkers" coords="'self'" click="clackMarker" ></ui-gmap-markers>
+				        <ui-gmap-marker ng-repeat="m in map.markers" coords="m" icon="m.icon" click="onMarkerClicked(m)" idKey="m.id" options="m.options"></ui-gmap-marker>				
+				        <ui-gmap-marker coords="map.clickedMarker" idKey="map.clickedMarker.id" options="map.clickedMarker.options"></ui-gmap-marker>        
+					</ui-gmap-google-map>
+			  	</div>
+		  	</div>
+		</div>
+	</div>
+</div>

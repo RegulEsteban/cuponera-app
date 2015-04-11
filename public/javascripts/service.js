@@ -160,6 +160,9 @@ factory('socket', function($rootScope) {
         getCuponById: function () {
             return $resource(base+'/getCuponById/:id', {id:'@id'});
         },
+        getUbicacionesByUser: function () {
+            return $resource(base+'/getAllUbicaciones/:id', {id:'@id'});
+        },
         getUserById: function () {
             return $resource(base+'/usuarios/:id', {id:'@id'});
         },

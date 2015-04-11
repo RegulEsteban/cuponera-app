@@ -81,12 +81,57 @@ function CuponImagenController($scope, $http, ImagenCupon, API, $rootScope){
     }else{
         $scope.menu_login='';
     }
+    $scope.comentario = '';
+    $scope.start = 0;
+    $scope.end = 5;
     
 	$scope.cupones = ImagenCupon.query();
-	$scope.comentario = '';
-	$scope.start = 0;
-	$scope.end = 5;
-	$scope.rate = 0;
+//	$scope.cupones.$promise.then(function(data) {
+//        for(var i=0;i<data.length;i++){
+//            for(var j=0;j<data[i].puntuacion.length;j++){
+//                if(data[i].puntuacion[j].id_usuario === $rootScope.getToken()){
+//                    console.log(data[i].puntuacion[j].puntuacion);
+//                    $scope.cupon.puntuacion.puntuacion = data[i].puntuacion[j].puntuacion; 
+//                }
+//            }
+//        }
+//    });
+	
+	$scope.resetRate = function(){
+	    $scope.overStar = undefined;
+	};
+	$scope.hoveringOver = function(value){
+	    $scope.overStar = value;
+	    if(value===1){
+	        $scope.desc_rate = "Realmente malo!!!";
+	    }else if(value === 2){
+	        $scope.desc_rate = "Pasable";
+	    }else if(value === 3){
+	        $scope.desc_rate = "No está tan mal!";
+	    }else if(value === 4){
+	        $scope.desc_rate = "Me gustó :)";
+	    }else if(value === 5){
+	        $scope.desc_rate = "Excelente, lo recomiendo!!! :D";
+	    }
+	};
+	
+	$scope.doRating = function(id, value){
+	    console.log(id+" | "+value);
+	    var fd = new FormData();
+        fd.append('id_cupon', id);
+        fd.append('puntuacion', value);
+        fd.append('id_usuario', $rootScope.getToken());
+        $http.post('/doRating', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(data) {
+            console.log("exitoooo");
+        })
+        .error(function(data) {
+            console.log('Error: '+data);
+        });
+	};
 	
 	$scope.doComment = function(id, coment, list){
 	    var fd = new FormData();
@@ -244,7 +289,7 @@ function CuponUploadController($scope, $http, $location, fileReader, API, $rootS
 	};
 }
 
-function ProveedorController($scope, $sce, $location, Usuario, $http, fileReader, $window){
+function ProveedorController($scope, $sce, $location, Usuario, $http, fileReader, $window, API, $rootScope){
     $scope.confirm_contrasena = '';
     $scope.active = '';
     $scope.showButton = true;
@@ -304,12 +349,55 @@ function ProveedorController($scope, $sce, $location, Usuario, $http, fileReader
     };
 }
 
-function CuponesController($scope, API, $rootScope, $window){
+function CuponesController($scope, API, $rootScope, $window, $location, $http){
     if ($rootScope.isSessionActive()) {
         $scope.menu_login='proveedor';
     }else{
         $window.location.href = ('#/login');
     }
+    
+    $scope.addUbicaciones = function(){
+        var ubicaciones = $scope.proveedor;
+        var fd = new FormData();
+        fd.append('ubicaciones', angular.toJson(ubicaciones));
+        fd.append('id_usuario', $rootScope.getToken());
+        if($scope.proveedor.ubicaciones[$scope.i].lat === '' || $scope.proveedor.ubicaciones[$scope.i].lon === ''){
+            alert("Ubicación incorrecta.");
+            return false;
+        }
+        $http.post('/addUbicaciones', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(data) {
+            alert('¡Ubicaiones Guardadas!');
+            $location.path('/cuponera');
+        })
+        .error(function(data) {
+            console.log('Error: '+data);
+        });
+    };
+    
+    API.getUbicacionesByUser().get({id: $rootScope.getToken()}).$promise.then(function(data) {
+        for(var i=0;i<data.ubicaciones.length;i++){
+            $scope.map.markers.push({
+                id: 0,
+                options: {
+                    animation: 2,
+                    labelContent: "<div class='alert alert-success' role='alert' >" +
+                                      "<p><strong>" +
+                                          'Latitud: ' + data.ubicaciones[i].lat + '<br/>' +
+                                          'Longitud: ' + data.ubicaciones[i].lon + '<br/>' +
+                                      "</strong></p>" +
+                                  "</div>",
+                    labelAnchor:"100 100"
+                },
+                latitude: data.ubicaciones[i].lat,
+                longitude: data.ubicaciones[i].lon
+            });
+        }
+        $scope.proveedor.ubicaciones = data.ubicaciones;
+    });
 }
 
 function SignInControlller($scope, $sce, API, $rootScope, $window){
@@ -346,5 +434,42 @@ function SignInControlller($scope, $sce, API, $rootScope, $window){
         }).error(function (error) {
             $scope.error = $sce.trustAsHtml("<div class='alert alert-danger' role='alert' >Usuario y/o password incorrectos.</div>");
         });
+    };
+}
+
+function ExplorarControlller($scope, $timeout, $log, $http, uiGmapGoogleMapApi, $location, API, $rootScope){
+    API.getUbicaciones().query().$promise.then(function(data) {
+        for(var cupon in data){
+            if(data[cupon].id_usuario){
+                for(var j=0;j<data[cupon].id_usuario.ubicaciones.length;j++){
+                    var marker = {
+                            id: 0,
+                            options: {
+                                animation: 2,
+                                labelContent: '<a class="thumbnail_map" href="#/cuponera">'+
+                                                  '<img src="'+data[cupon].binaryImage+'" alt="'+data[cupon].id_usuario.empresa+'" class="thumbnail_map img-rounded">'+
+                                              '</a>', 
+                                labelAnchor:"50 98"
+                            },
+                            latitude: data[cupon].id_usuario.ubicaciones[j].lat,
+                            longitude: data[cupon].id_usuario.ubicaciones[j].lon,
+                            events:{
+                                click: function(){
+                                  alert("rectangle dblclick");
+                                }
+                              }
+                        };
+                    $scope.map.markers.push(marker);
+                    
+                    
+                }
+            }
+        }
+        
+    });
+    
+    $scope.showCupon = function(){
+        alert("sdfghjkl");
+        console.log("sdfghjklñ");
     };
 }

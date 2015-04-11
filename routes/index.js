@@ -129,7 +129,7 @@ exports.imagenes = function(req, res) {
 		    path: 'id_usuario',
 		    select: 'empresa extension_avatar avatar_binary',
 		    options: { limit: 1 }
-	  }).select('nombre extension imagen_binary fecha_validez comentarios id_usuario').exec(function(error, result){
+	  }).select('_id nombre extension imagen_binary fecha_validez comentarios id_usuario puntuacion').exec(function(error, result){
 		if(!error){
 			var i = 0, respuesta = new Array(result.length);
             for (i; i < result.length; i=i+1)
@@ -142,7 +142,8 @@ exports.imagenes = function(req, res) {
             	respuesta[i]={binaryImage: "data:"+result[i].extension+";base64,"+result[i].imagen_binary, 
             	            nombre: result[i].nombre, _id: result[i]._id, 
             	            comentarios: result[i].comentarios, 
-            	            fecha_validez: fecha_d, id_usuario: result[i].id_usuario};
+            	            fecha_validez: fecha_d, id_usuario: result[i].id_usuario, 
+            	            puntuacion: result[i].puntuacion};
             }
             res.json(respuesta);
 		}
@@ -238,6 +239,24 @@ exports.doComentoByCupon = function(req, res){
     });
 };
 
+exports.doRating = function(req, res){
+    var input = req.body;
+    Cupon.findById(input.id_cupon).exec(function(err, cupon){
+        Usuario.findById(input.id_usuario).exec(function (err, usuario) {
+            if(usuario){
+                var respuesta = {puntuacion: input.puntuacion, id_usuario: usuario._id};
+                cupon.puntuacion.push(respuesta);
+                cupon.save(function(err, doc){
+                    respuesta = {id_cupon: input.id_cupon, puntuacion: input.puntuacion, id_usuario: usuario};
+                    res.json(respuesta);
+                });
+            }else{
+                throw err;
+            }
+        });
+    });
+};
+
 exports.createCuponero = function(req, res){
     var image = req.files.file;
     var bodyUbicaciones = req.body.ubicaciones;
@@ -266,11 +285,13 @@ exports.createCuponero = function(req, res){
 
 exports.addUbicaciones = function(req, res){
     var bodyUbicaciones = req.body;
-    Usuario.findOne({ 'nombre' : 'Pablo' }).exec(function (err, usuario) {
+    Usuario.findById(bodyUbicaciones.id_usuario).exec(function (err, usuario) {
         if(usuario){
             bodyUbicaciones=JSON.parse(bodyUbicaciones.ubicaciones);
             for(var i=0;i<bodyUbicaciones.ubicaciones.length;i=i+1){
-                usuario.ubicaciones.push(bodyUbicaciones.ubicaciones[i]);
+                if(bodyUbicaciones.ubicaciones[i]._id === '' || bodyUbicaciones.ubicaciones[i]._id === undefined){
+                    usuario.ubicaciones.push(bodyUbicaciones.ubicaciones[i]);
+                }
             }
             usuario.save(function(err, doc){
                 res.json(usuario);
@@ -357,6 +378,17 @@ exports.getAllUbicaciones = function(req, res, next) {
     });
 };
 
+exports.getAllUbicacionesByUser = function(req, res, next) {    
+    var input = req.params;
+    Usuario.findById(input.id).populate({
+        path: 'ubicaciones'
+    }).select("_id empresa ubicaciones").exec(function (error, result) {
+        if(!error){
+            res.json(result);
+        }
+    });
+};
+
 exports.doFavorito = function(req, res){
     var input = req.body;
     Cupon.findById(input.id_cupon).exec(function(err, cupon){
@@ -405,7 +437,7 @@ exports.getFavoritos = function(req, res, next){
 
 exports.login = function(req, res, next){
     var user = req.body;
-    if (user.email.trim().length == 0 || user.password.trim().length == 0) {
+    if (user.email.trim().length === 0 || user.password.trim().length === 0) {
         res.json({error: "Invalid User"});
     }
     Usuario.findOne({email: req.body.email}, function (err, dbUser) {

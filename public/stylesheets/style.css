@@ -34,6 +34,10 @@ a {
   max-width: 370px; max-height: 370px; line-height: 20px; margin-bottom: 5px;
 }
 
+.thumbnail_map {
+  max-width: 100px; max-height: 100px; line-height: 20px; margin-bottom: 5px;
+}
+
 .inputWrapper {
     height: 40px;
     width: 32%;
