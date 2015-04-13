@@ -143,7 +143,7 @@ exports.imagenes = function(req, res) {
             	            nombre: result[i].nombre, _id: result[i]._id, 
             	            comentarios: result[i].comentarios, 
             	            fecha_validez: fecha_d, id_usuario: result[i].id_usuario, 
-            	            puntuacion: result[i].puntuacion};
+            	            puntuacion: result[i].puntuacion, ratingc: result[i].puntuacion};
             }
             res.json(respuesta);
 		}

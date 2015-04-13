@@ -138,6 +138,7 @@ function CuponImagenController($scope, $http, ImagenCupon, API, $rootScope){
         fd.append('id_cupon', id);
         fd.append('comentario', coment);
         fd.append('fecha', new Date());
+        fd.append('id_usuario', $rootScope.getToken());
         $http.post('/comentar', fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
@@ -438,6 +439,20 @@ function SignInControlller($scope, $sce, API, $rootScope, $window){
 }
 
 function ExplorarControlller($scope, $timeout, $log, $http, uiGmapGoogleMapApi, $location, API, $rootScope){
+    if ($rootScope.isSessionActive()) {
+        $scope.usuario = API.getUserById().get({id: $rootScope.getToken()});
+        $scope.usuario.$promise.then(function(data) {
+            if(data.tipo_usuario[0].identificador==$rootScope.getVisor()){
+                $scope.menu_login='visor';
+            }else if(data.tipo_usuario[0].identificador==$rootScope.getProv()){
+                $scope.menu_login='proveedor';
+            }else{
+                $scope.menu_login='';
+            }
+        });
+    }else{
+        $scope.menu_login='';
+    }
     API.getUbicaciones().query().$promise.then(function(data) {
         for(var cupon in data){
             if(data[cupon].id_usuario){

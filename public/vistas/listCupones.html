@@ -1,18 +1,17 @@
 <div class="page-header">
-	<h3>Images  <span class="glyphicon glyphicon-tag"></span></h3>
 </div>
 <div class="container">
-	<div ng-switch on="menu_login">
-	    <div ng-switch-when="visor">
-	        <div ng-include="'vistas/menu_user_visor.html'"></div>
-	    </div>
-	    <div ng-switch-when="proveedor">
-	        <div ng-include="'vistas/menu_user_proveedor.html'"></div>
-	    </div>
-	    <div ng-switch-default>
-	        <div ng-include="'vistas/menu_user.html'"></div>
-	    </div>
-	</div>
+    <div ng-switch on="menu_login">
+        <div ng-switch-when="visor">
+            <div ng-include="'vistas/menu_user_visor.html'"></div>
+        </div>
+        <div ng-switch-when="proveedor">
+            <div ng-include="'vistas/menu_user_proveedor.html'"></div>
+        </div>
+        <div ng-switch-default>
+            <div ng-include="'vistas/menu_user.html'"></div>
+        </div>
+    </div>
 	
     <div class="row">
         <div class="[ col-xs-12 col-sm-6 ]" ng-repeat="cupon in cupones">
@@ -32,9 +31,9 @@
                 <div class="panel-google-plus-tags">
                     <ul>
                         <li>
-                        	<button type="button" class="btn btn-success">
-		     					<span class="glyphicon glyphicon-comment"></span> Favorito
-		     				</button>
+                            <button type="button" class="btn btn-success">
+                                <span class="glyphicon glyphicon-star"></span> Favorito
+                            </button>
                         </li>
                     </ul>
                 </div>
@@ -48,18 +47,42 @@
                         <img bn-lazy-src="{{cupon.binaryImage}}" class="thumbnail" alt="{{cupon.nombre}}"/>
                     </a>
                     
+                    
+                    
+                    <div ng-switch on="cupon.puntuacion.length">
+                        <div ng-switch-when="0">
+                            <h5>¿Qué te pareció? <strong ng-show="overStar">{{desc_rate}}</strong></h5>
+                            <h2><rating class="color-star" ng-model="cupon.puntuacion.puntuacion" max="5" on-hover="hoveringOver(value)" on-leave="resetRate()" ng-click="doRating(cupon._id, cupon.puntuacion.puntuacion)"></rating></h2>
+                        </div>
+                        
+                        <div ng-switch-default>
+                            <div ng-repeat="ratingc in cupon.puntuacion">
+                                <div ng-switch on="ratingc.id_usuario">
+                                    <div ng-switch-when="usuario._id">
+                                        <h5>¿Qué te pareció? <strong ng-show="overStar">{{desc_rate}}</strong></h5>
+                                        <h2><rating class="color-star" ng-model="ratingc.puntuacion" max="5" on-hover="hoveringOver(value)" on-leave="resetRate()" ng-click="doRating(cupon._id, ratingc.puntuacion)"></rating></h2>
+                                    </div>
+                                    <div ng-switch-default>
+                                        <h5>¿Qué te pareció? <strong ng-show="overStar">{{desc_rate}}</strong></h5>
+                                        <h2><rating class="color-star" ng-model="ratingc.puntuacion" max="5" on-hover="hoveringOver(value)" on-leave="resetRate()" ng-click="doRating(cupon._id, ratingc.puntuacion)"></rating></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div ng-repeat="ratingc in cupon.puntuacion">
-                    	<div ng-switch on="ratingc.id_usuario">
+                        
+<!--                    	<div ng-switch on="ratingc.id_usuario">
+                            {{ratingc.puntuacion}}
 	    					<div ng-switch-when="usuario._id">
 	    						{{ratingc.puntuacion}}
 	    						<h5>¿Qué te pareció? <strong ng-show="overStar">{{desc_rate}}</strong></h5>
                     			<h2><rating class="color-star" ng-model="ratingc.puntuacion" max="5" on-hover="hoveringOver(value)" on-leave="resetRate()" ng-click="doRating(cupon._id, ratingc.puntuacion)"></rating></h2>
 	    					</div>
 	    					<div ng-switch-default>
-	        					<h5>¿Qué te pareció? <strong ng-show="overStar">{{desc_rate}}</strong></h5>
-                    			<h2><rating class="color-star" ng-model="cupon.puntuacion.puntuacion" max="5" on-hover="hoveringOver(value)" on-leave="resetRate()" ng-click="doRating(cupon._id, cupon.puntuacion.puntuacion)"></rating></h2>
+	        					
 	    					</div>
-	    				</div>
+	    				</div>-->
                     </div>
                     <hr>
                     <div class="panel-google-plus-comment" ng-switch on="cupon.comentarios.length">
